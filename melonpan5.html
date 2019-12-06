@@ -1,0 +1,156 @@
+<!--  melonpan5.html 位置情報の検索が経過秒ごとに可能になった -->
+
+<html>
+    <head>
+    <meta charset="utf-8"/>
+    <script type="text/javascript">
+      /* 関数で切り分けたい。 */
+         var map;
+         var marker;
+         var lats = []; //今までの緯度
+         var lngs = []; //今までの経度
+         var latlngs = [];
+         var num_str;
+         var second = 1000;
+         function initMap() {
+              map = new google.maps.Map(document.getElementById('map_canvas'), {
+                center: {lat: 36.085824, lng: 140.106081},
+                zoom: 14
+              });
+         }
+      /* 現在位置を取得 */
+         function getCurrentPosition() {
+              if (navigator.geolocation) {
+                   /*var bHighAccuracy = document.getElementById('chxHighAccuracy').checked;
+                   var PositionOptions = {
+                        enableHighAccuracy: bHighAccuracy,
+                        timeout: 5000,
+                        maximumAge:Infinity
+                   };*/
+
+                  /* 現在位置取得 */
+                   navigator.geolocation.getCurrentPosition(success_func,error_func);
+              } else {
+                   alert('Geolocation を利用できません');
+              }
+         }
+      /* 成功したときの処理 -> 緯度・経度・時間を取得 */
+         function success_func(position) {
+              /* positionは位置情報を保持しています */
+              var lat = position.coords.latitude;
+              var lng = position.coords.longitude;
+//               var alt = position.coords.altitude;
+//               var accuracy = position.coords.accuracy;
+//               var accuracyAlt = position.coords.altitudeAccuracy;
+//             var heading = position.coords.heading ;             // 0=北、90=東、180=南、270=西
+//               var speed = position.coords.speed ;
+
+
+             var YourPosition =  new google.maps.LatLng(lat,lng);
+              var now = new Date(position.timestamp);  // 取得時間
+              now_str = now.getFullYear() +"年" +(now.getMonth()+1) + "月" + now.getDate() + "日"
+               + (now.getHours() + "時" + now.getMinutes() + "分" +now.getSeconds() +"秒");
+              // 現在位置にマーカーを立てる -> 位置を決めて、インスタンスを作れば○
+              marker = new google.maps.Marker({
+                             position: YourPosition,
+                             map: map,
+                             title:"You are here."
+              });
+              map.setCenter(YourPosition);
+              var win_options = {
+                   content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +'<br/>'
+                                         + '<br />取得時間：' + now_str
+              } ;
+                                                     /* + '<br />緯度、経度の精度：' + accuracy
+                                         + '<br />高度の精度：' + accuracyAlt
+                                         + '<br />方角：' + heading
+                                         + '<br />速度：' + speed */
+
+              var infoWindow = new google.maps.InfoWindow( win_options ) ;
+              infoWindow.open( map ,marker ) ;
+              // 現在位置の範囲
+              //csvファイルに書き込み。
+
+
+             lats.push(lat);
+             lngs.push(lng);
+
+            latlngs.push(google.maps.LatLng(lat, lng));
+
+           window.sessionStorage.setItem(['key1'],[lats]);
+           window.sessionStorage.setItem(['key2'],[lngs]);
+           window.sessionStorage.setItem(['key3'],[now_str]);
+
+
+
+           console.log(lats);
+           console.log(lngs);
+
+
+           var a = window.sessionStorage.getItem(['key1']);
+           console.log(a);    // => value1
+
+           var b = window.sessionStorage.getItem(['key2']);
+           console.log(b);   // => null
+
+           var c = window.sessionStorage.getItem(['key3']);
+           console.log(c);
+
+
+           lines = new google.maps.Polyline({
+             path: latlngs, //hairetu,
+             strokeColor:"FF0000",
+             strokeOpacity:.7,
+             strokeWeight:7
+           });
+
+           lines.setMap(map);
+              /*var Circle = new google.maps.Circle({
+                 strokeColor: '#FF0000',
+                 strokeOpacity: 0.8,
+                 strokeWeight: 2,
+                 fillColor: '#FF0000',
+                 fillOpacity: 0.35,
+                 map: map,
+                 center: YourPosition,
+                 radius: accuracy
+               });*/
+         }
+         function error_func(errorinfo) {
+              /* errorinfoはエラー情報を保持しています */
+              var errorcode = errorinfo.code;
+              var errmessage = errorinfo.message;
+              switch(errorcode) {
+                   case errorinfo.PERMISSION_DENIED: // 1:PERMISSION_DENIED:
+                        alert('このページにはアクセス許可がないため、位置情報の取得に失敗しました。\nエラーメッセージ：' + errmessage);
+                        break;
+                   case errorinfo.POSITION_UNAVAILABLE: // 2:POSITION_UNAVAILABLE:
+                        alert('少なくともひとつの位置情報ソースが内部的なエラーを返したため、位置情報の取得に失敗しました。\nエラーメッセージ：' + errmessage);
+                        break;
+                   case errorinfo.TIMEOUT: // 3:TIMEOUT:
+                        alert('指定された制限時間内に位置情報を取得することができませんでした。\nエラーメッセージ：' + errmessage);
+                        break;
+              }
+         }
+    </script>
+</head>
+
+<body>
+    <div style="height:400px;100%"id="map_canvas"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDq9Cjb-9mTgMGfSUzliGr6_j5k2kBkac&callback=initMap" async="" defer=""></script>
+    <br /><button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
+
+<!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
+
+   <script type="text/javascript">
+   function setTimer(){
+     var k = 1000;
+     var second = 15;
+
+     setInterval(getCurrentPosition,second*k);
+   }
+     /* このあとで、サーバーとの通信を行うようにすれば、データの保存、経路の計算もかのう！ */
+   </script>
+
+</body>
+</html>
