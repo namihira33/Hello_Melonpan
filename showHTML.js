@@ -26,33 +26,16 @@ const parser = csv.parse((error, data) => {
 })
 */
 
-function Calc(){
-  this.calory = 0;
-  this.body = 58;
-  this.v = 0;
-  this.calorycalc = function(){
-    time = 0.5;
-    this.calory = mets(this.v) * this.body * time * 1.05;
-  };
-  this.vcalc = function(d){
-    time = 0.5;
-    this.v = d/time;
-  };
-}
-
-
 const http = require('http');
 const hostname = '127.0.0.1';
 const port = 8080;
-
 var server = http.createServer();
 server.on('request', doRequest);
-
 // ファイルモジュールを読み込む
 var fs = require('fs');
-
 // リクエストの処理
 function doRequest(req, res) {
+    //calc
     console.log("何が");
     calc_all();
     console.log("起こってるの？");
@@ -65,40 +48,45 @@ function doRequest(req, res) {
         res.write(data);
         res.end();
     }
-
 }
-
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
 
 
 
+function Calc(){
+  var me = this;
+  this.calory = 0;
+  this.body = 58;
+  this.v = 0;
+  this.calorycalc = function(){
+    time = 0.5;
+    this.calory = mets(this.v) * this.body * time * 1.05;
+  };
+  me.vcalc = function(d){
+    time = 0.5;
+    this.v = d/time;
+  };
+}
+
+
+var newData = []
+var item = []
 
 // 計算機構
 function calc_all(){
-  //処理（跡でpipeに食べさせる）
   const fs = require('fs');
-  const csv = require('csv');
-  //読み込みと処理を実行
-  //fs.createReadStream('test.csv').pipe(parser);
-  //var text = fs.createReadStream('test.csv');
-  //text.parser();
-  const readline = require('readline')
-  var stream = fs.createReadStream('test.csv');
-  var reader = readline.createInterface({ input: stream })
-  var newData = []
-  var item = []
-  reader.on('line', (data) => {
-    item = data.split(',');
-    //item = data.split(',').map((value) => { return value.replace(/^"+|"+$/g,'') })
-    newData.push( item );
-    console.log(item);
-    console.log('---------------');
-    //console.log(newData);
-    //console.log('---------------');
-    //console.log('---------------');
-  });
+  const csvSync = require('csv-parse/lib/sync'); // requiring sync module
+  let text = fs.readFileSync("test.csv", 'utf-8');
+  newData = csvSync(text);
+  //console.log(res);
+  /*
+  reader.onload = function(ev){
+    text = reader.result;
+    console.log(text)
+  }
+  */
 
   console.log('newDataはありますか？');
   console.log(newData);
