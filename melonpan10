@@ -12,7 +12,7 @@
          var latlngs = [];
          var num_str;
          var positions = [];
-         var sumdist;
+         var sumdist = 0 ;
          var second = 1000;
          function initMap() {
               map = new google.maps.Map(document.getElementById('map_canvas'), {
@@ -118,12 +118,12 @@
                  center: YourPosition,
                  radius: accuracy
                });*/
-      
+
 if(positions.length - 1 > 0){
               var destinationA = positions[positions.length - 2];
             }else{
-              var destinationA = YourPosition; 
-              
+              var destinationA = YourPosition;
+
             }
             place(YourPosition, destinationA, sumdist);
 
@@ -149,8 +149,7 @@ if(positions.length - 1 > 0){
                 distance = response['rows'][0]['elements'][0]['distance']['value'];
                 console.log(distance + 'm');
 
-                document.getElementById('dist').innerHTML = distance ;
-                document.getElementById('dist').innerHTML = sumdist ;
+                document.getElementById('dist').innerHTML = sumdist + 'm';
                 sumdist += distance;
                 console.log(positions.length);
                 console.log(sumdist);
@@ -182,7 +181,7 @@ if(positions.length - 1 > 0){
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDq9Cjb-9mTgMGfSUzliGr6_j5k2kBkac&callback=initMap" async="" defer=""></script>
     <br /><button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
     <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
-  
+
     <div id="dist"></div>
 
 <!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
