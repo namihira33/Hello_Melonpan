@@ -17,6 +17,7 @@
   "homepage": "https://github.com/namihira33/Hello_Melonpan#readme",
   "description": "",
   "dependencies": {
+    "csv": "^5.3.1",
     "cvs": "^0.6.8",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
