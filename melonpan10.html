@@ -125,9 +125,9 @@ if(positions.length - 1 > 0){
               var destinationA = YourPosition;
 
             }
-            place(YourPosition, destinationA, sumdist);
+            place(YourPosition, destinationA);
 
-            function place(YourPosition, destinationA, sumdist){
+            function place(YourPosition, destinationA){
               /* 現在地*/
               var origin1 = YourPosition;
 
@@ -151,8 +151,8 @@ if(positions.length - 1 > 0){
 
                 document.getElementById('dist').innerHTML = sumdist + 'm';
                 sumdist += distance;
-                console.log(positions.length);
                 console.log(sumdist);
+                
 
               }
             }
@@ -183,7 +183,6 @@ if(positions.length - 1 > 0){
     <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
 
     <div id="dist"></div>
-
 <!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
 
    <script type="text/javascript">

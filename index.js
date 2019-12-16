@@ -1,19 +1,15 @@
 
 const http = require('http');
 const hostname = '127.0.0.1';
-const port = 8080;
+const port = 8000;
 var server = http.createServer();
 server.on('request', doRequest);
 // ファイルモジュールを読み込む
 var fs = require('fs');
 // リクエストの処理
 function doRequest(req, res) {
-    //calc
-    //console.log("何が");
     calc_all();
-    //console.log("起こってるの？");
-    // ファイルを読み込んだら、コールバック関数を実行する。
-    fs.readFile('./melonpan2.html', 'utf-8' , doReard );
+    fs.readFile('./melonpan10.html', 'utf-8' , doReard );
 
     // コンテンツを表示する。
     function doReard(err, data) {
@@ -22,9 +18,7 @@ function doRequest(req, res) {
         res.end();
     }
 }
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+server.listen(port);
 
 
 
