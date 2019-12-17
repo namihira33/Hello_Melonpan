@@ -13,7 +13,7 @@ const client = new Client({
 console.log(process.env.Database);
 client.connect();
 
-client.query('SELECT * FROM users;', (err, res) => {
+client.query('show tables', (err, res) => {
   if (err) throw err;
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
