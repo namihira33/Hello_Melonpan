@@ -2,6 +2,24 @@
 const http = require('http');
 //const hostname = '127.0.0.1';
 const port = process.env.PORT || 8000;
+
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.Database,
+  ssl: true,
+});
+
+client.connect();
+
+client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
+
 var server = http.createServer();
 server.on('request', doRequest);
 // ファイルモジュールを読み込む
@@ -20,7 +38,7 @@ function doRequest(req, res) {
 }
 server.listen(port);
 
-
+/*
 
 function Calc(){
   this.calory = 0;
@@ -72,3 +90,4 @@ function mets(v){
   if (v < 22400/60){return 8.0;}
   return 10.0;
 }
+*/
