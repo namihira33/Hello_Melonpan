@@ -26,7 +26,6 @@ server.on('request', doRequest);
 var fs = require('fs');
 // リクエストの処理
 function doRequest(req, res) {
-    calc_all();
     fs.readFile('./melonpan10.html', 'utf-8' , doReard );
 
     // コンテンツを表示する。
