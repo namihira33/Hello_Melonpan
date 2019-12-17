@@ -1,17 +1,13 @@
-<!--  melonpan5.html 位置情報の検索が経過秒ごとに可能になった -->
+<!--  melonpan11.html 位置情報の検索が経過秒ごとに可能になった -->
 
 <html>
     <head>
     <meta charset="utf-8"/>
     <script type="text/javascript">
-      /* 関数で切り分けたい。 */
-         var map;
-         var marker;
-         var lats = []; //今までの緯度
-         var lngs = []; //今までの経度
-         var latlngs = [];
+         var map;     /* Google Map インスタンス */
+         var marker;  /* marker のインスタンス */
          var num_str;
-         var positions = [];
+         var positions = []; /* 現在位置情報LatLng型の配列 */
          var sumdist = 0 ;
          var second = 1000;
          function initMap() {
@@ -23,6 +19,7 @@
       /* 現在位置を取得 */
          function getCurrentPosition() {
               if (navigator.geolocation) {
+                /* 高精度に現在位置を取得したいとき */
                    /*var bHighAccuracy = document.getElementById('chxHighAccuracy').checked;
                    var PositionOptions = {
                         enableHighAccuracy: bHighAccuracy,
@@ -38,20 +35,30 @@
          }
       /* 成功したときの処理 -> 緯度・経度・時間を取得 */
          function success_func(position) {
-              /* positionは位置情報を保持しています */
+              /* 取得情報の整理 */
               var lat = position.coords.latitude;
               var lng = position.coords.longitude;
-//               var alt = position.coords.altitude;
-//               var accuracy = position.coords.accuracy;
-//               var accuracyAlt = position.coords.altitudeAccuracy;
-//             var heading = position.coords.heading ;             // 0=北、90=東、180=南、270=西
-//               var speed = position.coords.speed ;
+           
+              var test_origin = new google.maps.LatLng(36.098174, 140.100769);
+              var test_destination = new google.maps.LatLng(36.097940, 140.100827);
 
-
+            /* LatLng型の場合、LatLng.lat() や LatLng.lng()でそれぞれの数値を取ってこれる */
              var YourPosition =  new google.maps.LatLng(lat,lng);
               var now = new Date(position.timestamp);  // 取得時間
               now_str = now.getFullYear() +"年" +(now.getMonth()+1) + "月" + now.getDate() + "日"
                + (now.getHours() + "時" + now.getMinutes() + "分" +now.getSeconds() +"秒");
+           
+           /* 前位置にあったマーカーを消去 */
+           	function deleteMakers() {
+		      if(marker != null){
+		        marker.setMap(null);
+              }
+                marker = null;
+            }
+           
+           deleteMakers();
+
+           
               // 現在位置にマーカーを立てる -> 位置を決めて、インスタンスを作れば○
               marker = new google.maps.Marker({
                              position: YourPosition,
@@ -60,55 +67,30 @@
               });
               map.setCenter(YourPosition);
               var win_options = {
-                   content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +'<br/>'
-                                         + '<br />取得時間：' + now_str
-              } ;
-                                                     /* + '<br />緯度、経度の精度：' + accuracy
-                                         + '<br />高度の精度：' + accuracyAlt
-                                         + '<br />方角：' + heading
-                                         + '<br />速度：' + speed */
+                   content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() + '<br />取得時間：' + now_str + '<br />' + sumdist +'m'            } ;
 
+              /* デバッグ用のinfowindow */
               var infoWindow = new google.maps.InfoWindow( win_options ) ;
               infoWindow.open( map ,marker ) ;
-              // 現在位置の範囲
-              //csvファイルに書き込み。
+           
+             positions.push(YourPosition);
 
-
-             lats.push(lat);
-             lngs.push(lng);
-
-            latlngs.push(YourPosition);
-
-
-           window.sessionStorage.setItem(['key1'],[lats]);
-           window.sessionStorage.setItem(['key2'],[lngs]);
-           window.sessionStorage.setItem(['key3'],[now_str]);
-
-
-
-           console.log(lats);
-           console.log(lngs);
-
-
-           var a = window.sessionStorage.getItem(['key1']);
-           console.log(a);    // => value1
-
-           var b = window.sessionStorage.getItem(['key2']);
-           console.log(b);   // => null
-
-           var c = window.sessionStorage.getItem(['key3']);
-           console.log(c);
-
-
+           /* 線を引く := positionsに入っている配列の緯度経度を全部結ぶ */  
            lines = new google.maps.Polyline({
-             path: latlngs, //hairetu,
+             path: positions, 
              strokeColor:"FF0000",
              strokeOpacity:.7,
              strokeWeight:7
            });
 
            lines.setMap(map);
-              /*var Circle = new google.maps.Circle({
+           
+//             var heading = position.coords.heading ;             // 0=北、90=東、180=南、270=西 ->向いている時期
+//               var speed = position.coords.speed ;               // 速さは機能していないみたいです。
+           
+              /* 円の描き方 */
+              /*
+                var Circle = new google.maps.Circle({
                  strokeColor: '#FF0000',
                  strokeOpacity: 0.8,
                  strokeWeight: 2,
@@ -117,25 +99,25 @@
                  map: map,
                  center: YourPosition,
                  radius: accuracy
-               });*/
+               }); */
 
-if(positions.length - 1 > 0){
-              var destinationA = positions[positions.length - 2];
+            if(positions.length - 1 > 0){
+              var originA = positions[positions.length - 2];
             }else{
-              var destinationA = YourPosition;
-
+              var originA = YourPosition;
             }
-            place(YourPosition, destinationA);
+           
+           /* place(目的地:YourPosition,出発地:originA) -> 距離取得 */
+            place(YourPosition, originA);
 
-            function place(YourPosition, destinationA){
-              /* 現在地*/
-              var origin1 = YourPosition;
+            function place(YourPosition, originA){
 
+              /* 距離取得 */
               var service = new google.maps.DistanceMatrixService();
               service.getDistanceMatrix(
               {
-                origins: [origin1],
-                destinations: [destinationA],
+                origins: [originA],
+                destinations: [YourPosition],
                 travelMode: 'WALKING',
                 unitSystem: google.maps.UnitSystem.METRIC,
                 avoidHighways: true,
@@ -143,17 +125,14 @@ if(positions.length - 1 > 0){
               }, callback);
 
               function callback(response, status) {
-                // See Parsing the Results for
-                // the basics of a callback function.
                 //距離
                 distance = response['rows'][0]['elements'][0]['distance']['value'];
-                console.log(distance + 'm');
 
-                document.getElementById('dist').innerHTML = sumdist + 'm';
-                sumdist += distance;
-                console.log(sumdist);
+                document.getElementById('dist').innerHTML  = 'これだけ漕いだ : ' + sumdist + 'm';
+                document.getElementById('dist').innerHTML += '\n 速さはこれだけ : ' + sumdist/second + 'm/s';
                 
-
+                sumdist += distance;
+                
               }
             }
       }
@@ -183,13 +162,14 @@ if(positions.length - 1 > 0){
     <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
 
     <div id="dist"></div>
+
 <!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
 
    <script type="text/javascript">
    var intervalID;
+   var second = 10;
    function setTimer(){
      var k = 1000;
-     var second = 15;
 
      intervalID = setInterval(getCurrentPosition,second*k);
    }
@@ -198,7 +178,7 @@ if(positions.length - 1 > 0){
      var k = 1000;
      clearInterval(intervalID);
    }
-     /* このあとで、サーバーとの通信を行うようにすれば、データの保存、経路の計算もかのう！ */
+
    </script>
 
 </body>
