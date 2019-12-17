@@ -6,11 +6,10 @@ const port = process.env.PORT || 8000;
 const { Client } = require('pg');
 
 const client = new Client({
-  connectionString: process.env.Database,
+  connectionString: process.env.DATABASE_URL,
   ssl: true,
 });
 
-console.log(process.env.Database);
 client.connect();
 
 client.query('show tables', (err, res) => {
