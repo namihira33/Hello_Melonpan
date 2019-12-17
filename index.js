@@ -10,6 +10,7 @@ const client = new Client({
   ssl: true,
 });
 
+console.log(process.env.Database);
 client.connect();
 
 client.query('SELECT * FROM users;', (err, res) => {
