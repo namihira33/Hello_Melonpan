@@ -2,7 +2,6 @@
 const http = require('http');
 //const hostname = '127.0.0.1';
 const port = process.env.PORT || 8000;
-const INDEX = '/melonpan10.html';
 
 const { Client } = require('pg');
 
@@ -22,20 +21,6 @@ client.query('SELECT * FROM users', (err, res) => {
   }
   client.end();
  });  
-
-/*
-var express = require('express');
-const server = express()
-.use((req,res) => res.sendFile(INDEX,{root: __dirname}))
-.listen(port, () => console.log('Listening on {$port}'));
-
-var socketIO = require('socket.io');
-const io = socketIO(server);
-io.on('connection',(socket) => {
-  console.log('Client connected');
-  socket.on('disconnect',() => console.log('Client Disconnected'));
-})
-*/
 
 var server = http.createServer();
 server.on('request', doRequest);
