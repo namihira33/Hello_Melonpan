@@ -1,42 +1,79 @@
 
 const http = require('http');
+const url = require('url');
+const path = require('path');
 const querystring = require('querystring');
+var fs = require('fs');
+
 const hostname = '127.0.0.1';
 const port = 8080;
-var server = http.createServer();
-server.on('request', doRequest);
-// ファイルモジュールを読み込む
-var fs = require('fs');
+var server = http.createServer(requestServer).listen(port);
+//server.on('request', doRequest);
+
+
 // リクエストの処理
+/*
 function doRequest(req, res) {
     //calc
     //console.log("何が");
     //calc_all();
     //console.log("起こってるの？");
     // ファイルを読み込んだら、コールバック関数を実行する。
-    fs.readFile('./melonpan5.html', 'utf-8' , doReard );
+    fs.readFile('./melonpan7.html', 'utf-8' , doReard );
 
     // コンテンツを表示する。
     function doReard(err, data) {
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(data);
-        if(req.headers.cookie !== undefined) {
-				// 設定されているCookieをブラウザに表示する
-  				res.write(req.headers.cookie);
-  			} else {
-  				res.write("Unset Cookie");
-  			}
         res.end();
     }
 }
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
+*/
 
 
+/* ------------------------------------- */
+// 接続されたときに呼ばれる関数
+function requestServer(req, res) {
+	var uri = url.parse(req.url, true);
 
+	console.log(uri.pathname);
 
-
+	switch(uri.pathname) {
+		case "/set":
+			res.setHeader("Content-Type", "text/plain");
+			// Cookieに"hoge1=111"と"hoge2=あいうえお"を設定する。
+			res.setHeader("Set-Cookie", [ "hoge1=111", "hoge2=" +
+				querystring.escape("あいうえお") ]);
+			res.writeHead(200);
+			res.write("test");
+			res.end();
+			break;
+		case "/get":
+			res.writeHead(200, { "Content-Type" : "text/plain" });
+			if(req.headers.cookie !== undefined) {
+				// 設定されているCookieをブラウザに表示する
+				res.write(req.headers.cookie);
+			} else {
+				res.write("Unset Cookie");
+			}
+			res.end();
+			break;
+		default:
+			//res.writeHead(404, {"Content-Type" : "text/plain"});
+			//res.write("404 Not found.");
+      fs.readFile('./melonpan7.html', 'utf-8' , doReard );
+      function doReard(err, data) {
+          res.writeHead(200, {'Content-Type': 'text/html'});
+          console.log(data)
+          res.write(data);
+          res.end();
+      }
+			res.end();
+	}
+}
 
 
 
@@ -44,6 +81,7 @@ server.listen(port, hostname, () => {
 /* ------------------------------------- */
 
 /*
+
 function Calc(){
   this.calory = 0;
   this.body = 58;
