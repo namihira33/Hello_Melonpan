@@ -28,9 +28,9 @@ function doRequest(req, res) {
           for(var key in cookies) {
 	          res.write(key + "=" + cookies[key] + "<br>");
           }
-          res.setHeader("Set-Cookie", [
-            cookie.serialize("hoge1", "111", { maxAge:60 }),
-            cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]);
+          //res.setHeader("Set-Cookie", [
+          //  cookie.serialize("hoge1", "111", { maxAge:60 }),
+          //  cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]);
   			} else {
           res.setHeader("Set-Cookie", [
             cookie.serialize("hoge1", "111", { maxAge:60 }),
