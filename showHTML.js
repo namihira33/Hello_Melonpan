@@ -1,7 +1,7 @@
-
 const http = require('http');
 const querystring = require('querystring');
 const cookie = require('cookie');
+const uuid = require('node-uuid');
 const hostname = '127.0.0.1';
 const port = 8080;
 var server = http.createServer();
@@ -19,22 +19,28 @@ function doRequest(req, res) {
 
     // コンテンツを表示する。
     function doReard(err, data) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
-        res.write('<hr>');
         if(req.headers.cookie !== undefined) {
-				// 設定されているCookieをブラウザに表示する
+				  // 設定されているCookieをブラウザに表示する
           var cookies = cookie.parse(req.headers.cookie);
-          for(var key in cookies) {
-	          res.write(key + "=" + cookies[key] + "<br>");
-          }
-          //res.setHeader("Set-Cookie", [
-          //  cookie.serialize("hoge1", "111", { maxAge:60 }),
-          //  cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]);
-  			} else {
+          res.writeHead(200, {'Content-Type': 'text/html'});
+          res.write(data);
+          res.write('<hr>');
+          res.write("user_id =" + cookies["user_id"] + "<br>");
+          var user_id = cookies["user_id"];
+          console.log("ユーザ情報あり");
+          console.log("user_id : " + user_id);
+        }else {
+          user_id = uuid.v1();
           res.setHeader("Set-Cookie", [
+            cookie.serialize("user_id", user_id),
             cookie.serialize("hoge1", "111", { maxAge:60 }),
-            cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]);
+            cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
+          );
+          res.writeHead(200, {'Content-Type': 'text/html'});
+          res.write(data);
+          res.write('<hr>');
+          console.log("ユーザ情報なし");
+          console.log("user_id : " + user_id);
   			}
         res.end();
     }
