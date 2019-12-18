@@ -5,15 +5,18 @@ const port = process.env.PORT || 8000;
 const querystring = require('querystring');
 const cookie = require('cookie');
 
+/*
 const { Client } = require('pg');
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 }); 
+*/
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
 
+/* 
 client.connect();
 
 client.query('SELECT * FROM users', (err, res) => {
@@ -22,7 +25,7 @@ client.query('SELECT * FROM users', (err, res) => {
     console.log(JSON.stringify(row));
   }
   client.end();
- });  
+ });   */
 
 var server = http.createServer();
 server.on('request', doRequest);
@@ -43,9 +46,7 @@ function doRequest(req, res) {
           for(var key in cookies) {
 	          res.write(key + "=" + cookies[key] + "<br>");
           }
-          //res.setHeader("Set-Cookie", [
-          //  cookie.serialize("hoge1", "111", { maxAge:60 }),
-          //  cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]);
+
   			} else {
           res.setHeader("Set-Cookie", [
             cookie.serialize("hoge1", "111", { maxAge:60 }),
