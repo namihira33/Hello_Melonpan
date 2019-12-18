@@ -164,9 +164,22 @@ btn.addEventListener('click', function() {
 
 <body>
      <div style="height:400px;100%"id="map_canvas"></div>
-     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDq9Cjb-9mTgMGfSUzliGr6_j5k2kBkac&callback=initMap" async="" defer=""></script>
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDq9Cjb-9mTgMGfSUzliGr6_j5k2kBkac&callback=initMap" async="" defer="" tag="map"></script>
      <br /><button class'btn btn-primary' type='button' onclick='getCurrentPosition();'>現在位置取得</button>
      <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label>
      <a id="btn" download="sample.txt"></a>ダウンロード
 </body>
 </html>
+
+<style>
+     button {
+          font-size: 1.4em;
+          font-weight: bold;
+          padding: 10px 30px;
+     }
+
+     div {
+          height: 500px;
+     }
+
+</style>
