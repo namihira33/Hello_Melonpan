@@ -2,6 +2,8 @@
 const http = require('http');
 //const hostname = '127.0.0.1';
 const port = process.env.PORT || 8000;
+const querystring = require('querystring');
+const cookie = require('cookie');
 
 const { Client } = require('pg');
 
@@ -34,6 +36,21 @@ function doRequest(req, res) {
     function doReard(err, data) {
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.write(data);
+        res.write('<hr>');
+        if(req.headers.cookie !== undefined) {
+				// 設定されているCookieをブラウザに表示する
+          var cookies = cookie.parse(req.headers.cookie);
+          for(var key in cookies) {
+	          res.write(key + "=" + cookies[key] + "<br>");
+          }
+          //res.setHeader("Set-Cookie", [
+          //  cookie.serialize("hoge1", "111", { maxAge:60 }),
+          //  cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]);
+  			} else {
+          res.setHeader("Set-Cookie", [
+            cookie.serialize("hoge1", "111", { maxAge:60 }),
+            cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]);
+  			}
         res.end();
     }
 }
