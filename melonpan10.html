@@ -17,15 +17,7 @@
                 center: {lat: 36.085824, lng: 140.106081},
                 zoom: 14
               });
-           var socket = io();
-           var el;
-
-           socket.on('time', function(timeString) {
-             el = document.getElementById('server-time')
-             el.innerHTML = 'Server time: ' + timeString;
-           });
-              });
-         }
+              }
       /* 現在位置を取得 */
          function getCurrentPosition() {
               if (navigator.geolocation) {
