@@ -2,6 +2,7 @@
 const http = require('http');
 //const hostname = '127.0.0.1';
 const port = process.env.PORT || 8000;
+const INDEX = '/melonpan10.html';
 
 const { Client } = require('pg');
 
@@ -10,6 +11,7 @@ const client = new Client({
   ssl: true,
 });
 
+/* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
 client.connect();
 
 client.query('SELECT * FROM users', (err, res) => {
@@ -20,6 +22,18 @@ client.query('SELECT * FROM users', (err, res) => {
   client.end();
 });
 
+var express = require('express');
+const server = express()
+.use((req,res) => res.sendFile(INDEX,{root: __dirname}))
+.listen(PORT, () => console.log('Listening on {$PORT}'));
+
+const io = socketIO(server);
+io.on('connection',(socket) => {
+  console.log('Client connected');
+  socket.on('disconnect',() => console.log('Client Disconnected'));
+})
+
+/*
 var server = http.createServer();
 server.on('request', doRequest);
 // ファイルモジュールを読み込む
@@ -34,8 +48,10 @@ function doRequest(req, res) {
         res.write(data);
         res.end();
     }
-}
-server.listen(port);
+}*/
+
+
+
 
 /*
 

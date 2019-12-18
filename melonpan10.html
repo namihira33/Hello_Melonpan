@@ -2,6 +2,7 @@
 
 <html>
     <head>
+    <script src="/socket.io/socket.io.js"></script>
     <meta charset="utf-8"/>
     <script type="text/javascript">
          var map;     /* Google Map インスタンス */
@@ -14,6 +15,14 @@
               map = new google.maps.Map(document.getElementById('map_canvas'), {
                 center: {lat: 36.085824, lng: 140.106081},
                 zoom: 14
+              });
+           var socket = io();
+           var el;
+
+           socket.on('time', function(timeString) {
+             el = document.getElementById('server-time')
+             el.innerHTML = 'Server time: ' + timeString;
+           });
               });
          }
       /* 現在位置を取得 */
