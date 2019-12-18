@@ -4,14 +4,16 @@ const http = require('http');
 const port = process.env.PORT || 8000;
 const INDEX = '/melonpan10.html';
 
+/*
 const { Client } = require('pg');
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
-});
+}); */
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
+/*
 client.connect();
 
 client.query('SELECT * FROM users', (err, res) => {
@@ -20,13 +22,14 @@ client.query('SELECT * FROM users', (err, res) => {
     console.log(JSON.stringify(row));
   }
   client.end();
-});
+});  */
 
 var express = require('express');
 const server = express()
 .use((req,res) => res.sendFile(INDEX,{root: __dirname}))
-.listen(PORT, () => console.log('Listening on {$PORT}'));
+.listen(port, () => console.log('Listening on {$port}'));
 
+var socketIO = require('socket.io');
 const io = socketIO(server);
 io.on('connection',(socket) => {
   console.log('Client connected');
