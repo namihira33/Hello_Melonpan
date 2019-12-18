@@ -37,8 +37,7 @@ function doRequest(req, res) {
         res.end();
     }
 }
-
-
+server.listen(port);
 
 
 /*
