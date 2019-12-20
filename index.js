@@ -1,23 +1,16 @@
 
 const http = require('http');
-const hostname = '127.0.0.1';
+//const hostname = '127.0.0.1';
 const port = process.env.PORT || 8000;
-const querystring = require('querystring');
-const cookie = require('cookie');
-const uuid = require('node-uuid');
 
-/*
 const { Client } = require('pg');
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
-}); 
-*/
+});
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-
-/* 
 client.connect();
 
 client.query('SELECT * FROM users', (err, res) => {
@@ -26,54 +19,24 @@ client.query('SELECT * FROM users', (err, res) => {
     console.log(JSON.stringify(row));
   }
   client.end();
- });   */
+});
 
 var server = http.createServer();
 server.on('request', doRequest);
+// ファイルモジュールを読み込む
 var fs = require('fs');
+// リクエストの処理
 function doRequest(req, res) {
     fs.readFile('./melonpan10.html', 'utf-8' , doReard );
 
     // コンテンツを表示する。
     function doReard(err, data) {
-        
-      if(req.headers.cookie !== undefined) {
-      // 設定されているCookieをブラウザに表示する
-          var cookies = cookie.parse(req.headers.cookie);
-          res.writeHead(200, {'Content-Type': 'text/html'});
-          res.write(data);
-          res.write('<hr>');
-          res.write("user_id =" + cookies["user_id"] + "<br>");
-          var user_id = cookies["user_id"];
-          console.log("ユーザ情報あり");
-          console.log("user_id : " + user_id);
-        }
-      else {
-          user_id = uuid.v1();
-          res.setHeader("Set-Cookie", [
-            cookie.serialize("user_id", user_id),
-            cookie.serialize("hoge1", "111", { maxAge:60 }),
-            cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
-          );
-          res.writeHead(200, {'Content-Type': 'text/html'});
-          res.write(data);
-          res.write('<hr>');
-          console.log("ユーザ情報なし");
-          console.log("user_id : " + user_id);
+        res.writeHead(200, {'Content-Type': 'text/html'});
+        res.write(data);
         res.end();
-      }
     }
 }
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
-  
-  
-/*
 server.listen(port);
-*/
-
 
 /*
 
@@ -94,6 +57,8 @@ function Calc(){
 
 var newData = []
 var item = []
+
+// 計算機構
 function calc_all(){
   const fs = require('fs');
   const csvSync = require('csv-parse/lib/sync'); // requiring sync module
@@ -125,4 +90,4 @@ function mets(v){
   if (v < 22400/60){return 8.0;}
   return 10.0;
 }
- */
+*/
