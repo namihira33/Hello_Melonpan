@@ -15,7 +15,7 @@ function doRequest(req, res) {
     //calc_all();
     //console.log("起こってるの？");
     // ファイルを読み込んだら、コールバック関数を実行する。
-    fs.readFile('./melonpan5.html', 'utf-8' , doReard );
+    fs.readFile('./melonpan10.html', 'utf-8' , doReard );
 
     // コンテンツを表示する。
     function doReard(err, data) {
