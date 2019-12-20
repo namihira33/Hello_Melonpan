@@ -1,45 +1,79 @@
-
 const http = require('http');
-//const hostname = '127.0.0.1';
-const port = process.env.PORT || 8000;
-
-const { Client } = require('pg');
-
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
-});
-
-/* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-client.connect();
-
-client.query('SELECT * FROM users', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
-  client.end();
-});
-
+const querystring = require('querystring');
+const cookie = require('cookie');
+const uuid = require('node-uuid');
+const hostname = '127.0.0.1';
+const port = 8080;
 var server = http.createServer();
 server.on('request', doRequest);
 // ファイルモジュールを読み込む
 var fs = require('fs');
 // リクエストの処理
 function doRequest(req, res) {
+    //calc
+    //console.log("何が");
+    //calc_all();
+    //console.log("起こってるの？");
+    // ファイルを読み込んだら、コールバック関数を実行する。
     fs.readFile('./melonpan10.html', 'utf-8' , doReard );
 
     // コンテンツを表示する。
     function doReard(err, data) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
+        if(req.headers.cookie !== undefined) {
+				  // 設定されているCookieをブラウザに表示する
+          var cookies = cookie.parse(req.headers.cookie);
+          if(cookies["user_id"] !== undefined){
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            res.write('<hr>');
+            res.write("user_id =" + cookies["user_id"] + "<br>");
+            var user_id = cookies["user_id"];
+            console.log("ユーザ情報あり");
+            console.log("user_id : " + user_id);
+          }else{
+            user_id = uuid.v1();
+            res.setHeader("Set-Cookie", [
+              cookie.serialize("user_id", user_id),
+              cookie.serialize("hoge1", "111", { maxAge:60 }),
+              cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
+            );
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            res.write('<hr>');
+            console.log("ユーザ情報なし");
+            console.log("user_id : " + user_id);            
+          }
+        }else {
+          user_id = uuid.v1();
+          res.setHeader("Set-Cookie", [
+            cookie.serialize("user_id", user_id),
+            cookie.serialize("hoge1", "111", { maxAge:60 }),
+            cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
+          );
+          res.writeHead(200, {'Content-Type': 'text/html'});
+          res.write(data);
+          res.write('<hr>');
+          console.log("ユーザ情報なし");
+          console.log("user_id : " + user_id);
+  			}
         res.end();
     }
 }
-server.listen(port);
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+
+
+
+
+
+
+
+
+
+/* ------------------------------------- */
 
 /*
-
 function Calc(){
   this.calory = 0;
   this.body = 58;
