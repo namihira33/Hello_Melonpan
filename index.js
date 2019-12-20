@@ -2,8 +2,8 @@ const http = require('http');
 const querystring = require('querystring');
 const cookie = require('cookie');
 const uuid = require('node-uuid');
-const hostname = '127.0.0.1';
-const port = 8080;
+
+const port = process.env.PORT || 8000;
 var server = http.createServer();
 server.on('request', doRequest);
 // ファイルモジュールを読み込む
