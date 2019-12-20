@@ -10,10 +10,6 @@ server.on('request', doRequest);
 var fs = require('fs');
 // リクエストの処理
 function doRequest(req, res) {
-    //calc
-    //console.log("何が");
-    //calc_all();
-    //console.log("起こってるの？");
     // ファイルを読み込んだら、コールバック関数を実行する。
     fs.readFile('./melonpan10.html', 'utf-8' , doReard );
 
@@ -59,9 +55,8 @@ function doRequest(req, res) {
         res.end();
     }
 }
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+server.listen(port);
+console.log('Open : ' + port +'<-PORT')
 
 
 
