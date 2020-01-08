@@ -7,14 +7,14 @@ const port = process.env.PORT || 8000;
 var fs = require('fs');
 var server = http.createServer();
 
-
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
-}); 
+}); */
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-client.connect();
+//client.connect();
 
 server.on('request', doRequest);
 
@@ -72,12 +72,11 @@ server.listen(port);
 io.sockets.on('connection', function(socket) {
   socket.emit('greeting', {message: 'Connected'}, function (data) {
     console.log('result: ' + data);
-    var data2 = data.split(',');
-    console.log(data2);
   });
   socket.on('info',function(data){
     pos_inf = data;
     console.log('info : ' + data);
+    console.log(data.split(',')[0]);
   });
 });
 
@@ -94,6 +93,11 @@ client.query('SELECT * FROM users', (err, res) => {
   }
   client.end();
 });
+
+var datas = data.split(',');
+
+client.query("INSERT INTO places VALUES('" + user_id + "','" + datas[0] + "','" + 
+            datas[1] + "','" + datas[2] + "','" + datas[3] + "');");
 
 
 
