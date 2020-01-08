@@ -8,7 +8,7 @@ var fs = require('fs');
 var server = http.createServer();
 var temp;
 var datas;
-var user_id = 0;
+var user_id = 1000;
 var q_str = "";
 
 
