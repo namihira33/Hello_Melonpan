@@ -99,7 +99,7 @@ io.sockets.on('connection', function(socket) {
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
   }});
-    client.query('SELECT * FROM users', (err, res) => {
+    client.query('SELECT * FROM places', (err, res) => {
       if (err) throw err;
       for (let row of res.rows) {
       console.log(JSON.stringify(row));
