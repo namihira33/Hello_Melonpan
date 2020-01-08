@@ -11,14 +11,14 @@ var datas;
 var user_id = 0;
 var q_str = "";
 
-
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
 }); 
-
+*/
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-client.connect();
+/* client.connect(); */
 
 server.on('request', doRequest);
 
@@ -81,7 +81,13 @@ io.sockets.on('connection', function(socket) {
     console.log('info : ' + data);
     console.log(data.split(',')[0]);
     datas = data.split(',');
+    
+    const client = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: true,
+    });
     client.connect();
+    
     client.query("INSERT INTO users VALUES('100','melon')");
 
     q_str += "INSERT INTO places VALUES('";
@@ -97,6 +103,7 @@ io.sockets.on('connection', function(socket) {
     q_str += "');";
     console.log(q_str);
     client.query(q_str);
+    client.end();
   });
 });
 
