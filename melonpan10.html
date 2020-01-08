@@ -4,6 +4,7 @@
 
 <head>
      <meta charset="utf-8" />
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script type="text/javascript">
           var map; /* Google Map インスタンス */
           var marker; /* marker のインスタンス */
@@ -240,6 +241,31 @@
                }
                return 10.0;
           }
+
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+          function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+              ['Year', 'カロリー'],
+              ['1/1',  100],
+              ['1/2',  117],
+              ['1/3',  660],
+              ['1/4',  103],
+              ['1/5',  103],
+              ['1/6',  103],
+              ['1/7',  103]
+            ]);
+
+            var options = {
+              title: 'Company Performance',
+              hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+              vAxis: {minValue: 0}
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+            chart.draw(data, options);
+          }
+
      </script>
 </head>
 
@@ -253,6 +279,7 @@
      <div id="dist"></div>
      <div id="speed"></div>
      <div id="calory"></div>
+     <div id="chartW"></div>
 
      <!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
 
