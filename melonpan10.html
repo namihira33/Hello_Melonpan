@@ -60,7 +60,7 @@
                /* LatLng型の場合、LatLng.lat() や LatLng.lng()でそれぞれの数値を取ってこれる */
                var YourPosition = new google.maps.LatLng(lat, lng);
                var now = new Date(position.timestamp); // 取得時間
-               now_str = now.getFullYear() + / + (now.getMonth() + 1) + / + now.getDate() ;
+               now_str = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() ;
 
                /* 前位置にあったマーカーを消去 */
                function deleteMakers() {
