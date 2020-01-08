@@ -79,13 +79,6 @@ io.sockets.on('connection', function(socket) {
   });
   socket.on('info',function(data){
     datas = data.split(',');
-/*    
-    const client = new Client({
-      connectionString: process.env.DATABASE_URL,
-      ssl: true,
-    }); */
-    
-    client.query("INSERT INTO users VALUES('100','melon')");
 
     q_str += "INSERT INTO places VALUES('";
     q_str += user_id;
