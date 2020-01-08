@@ -99,7 +99,7 @@ client.query('SELECT * FROM users', (err, res) => {
 
 client.query("INSERT INTO users VALUES('100','melon')");
 
-console.log("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');")
+console.log("INSERT INTO places VALUES('" + "abc" + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + "1000" + "');")
 
 /*
 client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');");
