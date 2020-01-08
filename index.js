@@ -97,10 +97,11 @@ client.query('SELECT * FROM users', (err, res) => {
   client.end();
 });
 
-client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + datas[3] + "');");
+client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');");
 
-
-
+/*
+client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');");
+*/
 
 
 
