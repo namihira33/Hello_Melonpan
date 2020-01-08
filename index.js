@@ -97,7 +97,7 @@ client.query('SELECT * FROM users', (err, res) => {
   client.end();
 });
 
-client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');");
+client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + '1970-01-01 00:00:01 UTC' + "','" + '1000' + "');");
 
 /*
 client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');");
