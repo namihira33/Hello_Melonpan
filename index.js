@@ -18,7 +18,7 @@ const client = new Client({
 }); 
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-/* client.connect(); */
+ client.connect(); 
 
 server.on('request', doRequest);
 
@@ -78,15 +78,12 @@ io.sockets.on('connection', function(socket) {
     console.log('result: ' + data);
   });
   socket.on('info',function(data){
-    console.log('info : ' + data);
-    console.log(data.split(',')[0]);
     datas = data.split(',');
 /*    
     const client = new Client({
       connectionString: process.env.DATABASE_URL,
       ssl: true,
     }); */
-    client.connect();
     
     client.query("INSERT INTO users VALUES('100','melon')");
 
@@ -101,8 +98,19 @@ io.sockets.on('connection', function(socket) {
     q_str += "','";
     q_str  += datas[3];
     q_str += "');";
-    console.log(q_str);
-    client.query(q_str);
+    console.log(q_str + '\n');
+    client.query(q_str,(err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+  }
+    client.query('SELECT * FROM users', (err, res) => {
+      if (err) throw err;
+      for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+      }
+//  client.end();
+});
 
 //    client.end();
   });
@@ -113,12 +121,12 @@ io.sockets.on('disconnection',function(){
   console.log('disconnection');
 });*/
 
-
+/*
 client.query('SELECT * FROM users', (err, res) => {
   if (err) throw err;
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
-  }
+  } */
 //  client.end();
 });
 
