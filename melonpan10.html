@@ -4,6 +4,7 @@
 
 <head>
      <meta charset="utf-8" />
+     <script src="/socket.io/socket.io.js"></script>
      <script type="text/javascript">
           var map; /* Google Map インスタンス */
           var marker; /* marker のインスタンス */
@@ -42,6 +43,13 @@
           }
           /* 成功したときの処理 -> 緯度・経度・時間を取得 */
           function success_func(position) {
+              var socket = io.connect();
+              var inf_str = '';
+
+              socket.on('greeting', function(data, fn) {
+              var answer = confirm(data.message);
+              fn(answer);
+              });
                /* 取得情報の整理 */
                var lat = position.coords.latitude;
                var lng = position.coords.longitude;
@@ -77,6 +85,10 @@
                     content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +
                          '<br />取得時間：' + now_str + '<br />' + sumdist + 'm'
                };
+            
+              /* 送信用の情報を作成 -> 送信 */
+              var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + sumdist
+              socket.emit('info',info);
 
                /* デバッグ用のinfowindow */
                var infoWindow = new google.maps.InfoWindow(win_options);
@@ -118,9 +130,6 @@
 
                /* place(目的地:YourPosition,出発地:originA) -> 距離取得 */
                place(YourPosition, originA);
-
-               calc_cal(distance);
-
                function place(YourPosition, originA) {
 
                     /* 距離取得 */
@@ -137,6 +146,7 @@
                     function callback(response, status) {
                          //距離
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
+                         calc_cal(distance);
 
                          document.getElementById('dist').innerHTML = 'これだけ漕いだ : ' + sumdist + 'm';
                          document.getElementById('dist').innerHTML += '\n 速さはこれだけ : ' + Number.parseFloat (distance / 10 *3600/1000) + 'km/h = ' + distance / 10 * 60 + 'm/min = ' + distance / (10*one_second) + 'm/s';

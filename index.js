@@ -2,12 +2,22 @@ const http = require('http');
 const querystring = require('querystring');
 const cookie = require('cookie');
 const uuid = require('node-uuid');
-
+const { Client } = require('pg');
 const port = process.env.PORT || 8000;
-var server = http.createServer();
-server.on('request', doRequest);
-// ファイルモジュールを読み込む
 var fs = require('fs');
+var server = http.createServer();
+
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+}); 
+
+/* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
+//client.connect();
+
+server.on('request', doRequest);
+
 // リクエストの処理
 function doRequest(req, res) {
     // ファイルを読み込んだら、コールバック関数を実行する。
@@ -55,8 +65,33 @@ function doRequest(req, res) {
         res.end();
     }
 }
+var io = require('socket.io').listen(server);
+console.log(`Server running at ${port}/`);
 server.listen(port);
-console.log('Open : ' + port +'<-PORT')
+
+io.sockets.on('connection', function(socket) {
+  socket.emit('greeting', {message: 'Connected'}, function (data) {
+    console.log('result: ' + data);
+  });
+  socket.on('info',function(data){
+    pos_inf = data;
+    console.log('info : ' + data);
+  });
+});
+
+/*
+io.sockets.on('disconnection',function(){
+  console.log('disconnection');
+});*/
+
+/*
+client.query('SELECT * FROM users', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
 
 
 
