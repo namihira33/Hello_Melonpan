@@ -76,9 +76,9 @@ io.sockets.on('connection', function(socket) {
     console.log('result: ' + data);
   });
   socket.on('info',function(data){
-    temp = data;
-    console.log('info : ' + temp);
-    console.log(temp.split(',')[0]);
+    console.log('info : ' + data);
+    console.log(data.split(',')[0]);
+    datas = data.split(',');
   });
 });
 
@@ -95,8 +95,6 @@ client.query('SELECT * FROM users', (err, res) => {
   }
   client.end();
 });
-
-datas = temp.split(',');
 
 client.query("INSERT INTO places VALUES('" + user_id + "','" + datas[0] + "','" + 
             datas[1] + "','" + datas[2] + "','" + datas[3] + "');");
