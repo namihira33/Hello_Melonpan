@@ -88,7 +88,7 @@
             
               /* 送信用の情報を作成 -> 送信 */
               var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + sumdist
-              socket.emit('info',info);
+//              socket.emit('info',info);
 
                /* デバッグ用のinfowindow */
                var infoWindow = new google.maps.InfoWindow(win_options);
