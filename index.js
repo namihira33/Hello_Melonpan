@@ -97,7 +97,7 @@ client.query('SELECT * FROM users', (err, res) => {
   client.end();
 });
 
-client.query("INSERT INTO places VALUES('" + 0 + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + datas[3] + "');");
+client.query("INSERT INTO places VALUES('" + '0' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + datas[3] + "');");
 
 
 
