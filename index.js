@@ -18,6 +18,7 @@ const client = new Client({
 }); 
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
+client.connect();
 
 server.on('request', doRequest);
 
@@ -110,7 +111,7 @@ client.query('SELECT * FROM users', (err, res) => {
   for (let row of res.rows) {
     console.log(JSON.stringify(row));
   }
-  client.end();
+//  client.end();
 });
 
 
