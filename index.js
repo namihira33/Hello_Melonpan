@@ -6,6 +6,7 @@ const { Client } = require('pg');
 const port = process.env.PORT || 8000;
 var fs = require('fs');
 var server = http.createServer();
+var temp;
 var datas;
 
 
@@ -75,9 +76,9 @@ io.sockets.on('connection', function(socket) {
     console.log('result: ' + data);
   });
   socket.on('info',function(data){
-    pos_inf = data;
-    console.log('info : ' + data);
-    console.log(data.split(',')[0]);
+    temp = data;
+    console.log('info : ' + temp);
+    console.log(temp.split(',')[0]);
   });
 });
 
@@ -95,7 +96,7 @@ client.query('SELECT * FROM users', (err, res) => {
   client.end();
 });
 
-datas = data.split(',');
+datas = temp.split(',');
 
 client.query("INSERT INTO places VALUES('" + user_id + "','" + datas[0] + "','" + 
             datas[1] + "','" + datas[2] + "','" + datas[3] + "');");
