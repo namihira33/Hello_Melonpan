@@ -14,7 +14,7 @@ const client = new Client({
 }); 
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-//client.connect();
+client.connect();
 
 server.on('request', doRequest);
 
@@ -84,7 +84,7 @@ io.sockets.on('disconnection',function(){
   console.log('disconnection');
 });*/
 
-/*
+
 client.query('SELECT * FROM users', (err, res) => {
   if (err) throw err;
   for (let row of res.rows) {
