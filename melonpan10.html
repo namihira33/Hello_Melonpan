@@ -137,10 +137,8 @@
                     function callback(response, status) {
                          //距離
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
-                              if(distance >= 1){
-                                   document.getElementById('dist').innerHTML = 'これだけ漕いだ : ' + sumdist + 'm';
-                                   document.getElementById('dist').innerHTML += '<br>速さはこれだけ : ' + Number.parseFloat (distance / (10*one_second) *3600/1000) + 'km/h<br> = ' + distance / (10*one_second) * 60 + 'm/min<br> = ' + distance / (10*one_second) + 'm/s';
-                              }
+                         document.getElementById('dist').innerHTML = 'これだけ漕いだ : ' + sumdist + 'm';
+                         document.getElementById('dist').innerHTML += '<br>速さはこれだけ : ' + Number.parseFloat (distance / (10*one_second) *3600/1000) + 'km/h<br> = ' + distance / (10*one_second) * 60 + 'm/min<br> = ' + distance / (10*one_second) + 'm/s';
                          sumdist += distance;
 
                     }
@@ -188,9 +186,9 @@
 
                if(dist >= 1){
                     sum_calory += c.calory;
-                    document.getElementById('speed').innerHTML = '速度 :' + c.v + 'km/h';
-                    document.getElementById('calory').innerHTML = '消費カロリー : ' + sum_calory + 'kcal';
                }
+               document.getElementById('speed').innerHTML = '速度 :' + c.v + 'km/h';
+               document.getElementById('calory').innerHTML = '消費カロリー : ' + sum_calory + 'kcal';
           }
 
           function mets(v) {
