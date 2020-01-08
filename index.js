@@ -18,7 +18,6 @@ const client = new Client({
 }); 
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-client.connect();
 
 server.on('request', doRequest);
 
@@ -81,6 +80,7 @@ io.sockets.on('connection', function(socket) {
     console.log('info : ' + data);
     console.log(data.split(',')[0]);
     datas = data.split(',');
+    client.connect();
     client.query("INSERT INTO users VALUES('100','melon')");
 
     q_str += "INSERT INTO places VALUES('";
