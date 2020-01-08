@@ -10,6 +10,7 @@ var temp;
 var datas;
 var user_id = 1000;
 var q_str = "";
+var flag = false;
 
 
 const client = new Client({
@@ -78,8 +79,9 @@ io.sockets.on('connection', function(socket) {
     console.log('result: ' + data);
   });
   socket.on('info',function(data){
+    flag = false;
     datas = data.split(',');
-
+    if(!flag){
     q_str += "INSERT INTO places VALUES('";
     q_str += user_id;
     q_str += "','";
@@ -96,7 +98,7 @@ io.sockets.on('connection', function(socket) {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-  }
+  }});
     client.query('SELECT * FROM users', (err, res) => {
       if (err) throw err;
       for (let row of res.rows) {
@@ -105,8 +107,8 @@ io.sockets.on('connection', function(socket) {
 //  client.end();
 });
 
-//    client.end();
-  });
+    flag = true;
+  }
 });
 
 /*
