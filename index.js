@@ -7,14 +7,14 @@ const port = process.env.PORT || 8000;
 var fs = require('fs');
 var server = http.createServer();
 
-/*
+
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
-}); */
+}); 
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-//client.connect();
+client.connect();
 
 server.on('request', doRequest);
 
