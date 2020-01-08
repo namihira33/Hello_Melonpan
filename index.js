@@ -72,6 +72,8 @@ server.listen(port);
 io.sockets.on('connection', function(socket) {
   socket.emit('greeting', {message: 'Connected'}, function (data) {
     console.log('result: ' + data);
+    var data2 = str.split(',');
+    console.log('result: ' + data2[0]);
   });
   socket.on('info',function(data){
     pos_inf = data;
