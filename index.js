@@ -103,7 +103,8 @@ io.sockets.on('connection', function(socket) {
     q_str += "');";
     console.log(q_str);
     client.query(q_str);
-    client.end();
+
+//    client.end();
   });
 });
 
