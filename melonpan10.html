@@ -186,8 +186,8 @@
                c.vcalc(dist);
                c.calorycalc();
 
-               sum_calory += c.calory;
                if(dist >= 1){
+                    sum_calory += c.calory;
                     document.getElementById('speed').innerHTML = '速度 :' + c.v + 'km/h';
                     document.getElementById('calory').innerHTML = '消費カロリー : ' + sum_calory + 'kcal';
                }
