@@ -245,7 +245,7 @@
           google.charts.load('current', {'packages':['corechart']});
           google.charts.setOnLoadCallback(drawChart);
           function drawChart() {
-            var data = google.visualization.arrayToDataTable([
+            var arr = [
               ['Year', 'カロリー'],
               ['1/1',  100],
               ['1/2',  117],
@@ -254,7 +254,8 @@
               ['1/5',  103],
               ['1/6',  103],
               ['1/7',  103]
-            ]);
+            ]
+            var data = google.visualization.arrayToDataTable(arr);
 
             var options = {
               title: 'Company Performance',
