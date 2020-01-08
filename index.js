@@ -8,6 +8,7 @@ var fs = require('fs');
 var server = http.createServer();
 var temp;
 var datas;
+var user_id = 0;
 
 
 const client = new Client({
@@ -35,7 +36,7 @@ function doRequest(req, res) {
             res.write(data);
             res.write('<hr>');
             res.write("user_id =" + cookies["user_id"] + "<br>");
-            var user_id = cookies["user_id"];
+            user_id = cookies["user_id"];
             console.log("ユーザ情報あり");
             console.log("user_id : " + user_id);
           }else{
