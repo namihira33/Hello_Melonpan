@@ -6,6 +6,7 @@ const { Client } = require('pg');
 const port = process.env.PORT || 8000;
 var fs = require('fs');
 var server = http.createServer();
+var datas;
 
 
 const client = new Client({
@@ -94,7 +95,7 @@ client.query('SELECT * FROM users', (err, res) => {
   client.end();
 });
 
-var datas = data.split(',');
+datas = data.split(',');
 
 client.query("INSERT INTO places VALUES('" + user_id + "','" + datas[0] + "','" + 
             datas[1] + "','" + datas[2] + "','" + datas[3] + "');");
