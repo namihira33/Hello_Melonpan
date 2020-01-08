@@ -79,9 +79,9 @@ io.sockets.on('connection', function(socket) {
     console.log('result: ' + data);
   });
   socket.on('info',function(data){
+    q_str = '';
     flag = false;
     datas = data.split(',');
-    if(!flag){
     q_str += "INSERT INTO places VALUES('";
     q_str += user_id;
     q_str += "','";
@@ -103,11 +103,9 @@ io.sockets.on('connection', function(socket) {
       if (err) throw err;
       for (let row of res.rows) {
       console.log(JSON.stringify(row));
-      }
 //  client.end();
 });
 
-    flag = true;
   }
 });
 
