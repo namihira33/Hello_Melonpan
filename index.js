@@ -9,6 +9,7 @@ var server = http.createServer();
 var temp;
 var datas;
 var user_id = 0;
+var q_str = "";
 
 
 const client = new Client({
@@ -99,7 +100,20 @@ client.query('SELECT * FROM users', (err, res) => {
 
 client.query("INSERT INTO users VALUES('100','melon')");
 
-console.log("INSERT INTO places VALUES('" + "abc" + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + "1000" + "');")
+q_str += "INSERT INTO places VALUES('";
+q_str += user_id;
+q_str += "','";
+q_str += datas[0];
+q_str += "','";
+qstr  += datas[1];
+q_str += "','";
+qstr  += datas[2];
+q_str += "','";
+qstr  += datas[3];
+q_str += "');";
+
+
+console.log(q_str);
 
 /*
 client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');");
