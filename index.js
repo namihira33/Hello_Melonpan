@@ -104,9 +104,9 @@ io.sockets.on('connection', function(socket) {
       for (let row of res.rows) {
       console.log(JSON.stringify(row));
 //  client.end();
-});
+}
+    });
 
-  }
 });
 
 /*
