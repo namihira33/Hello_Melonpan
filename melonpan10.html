@@ -47,8 +47,7 @@
               var inf_str = '';
 
               socket.on('greeting', function(data, fn) {
-              var answer = confirm(data.message);
-              fn(answer);
+                console.log(data.message);
               });
                /* 取得情報の整理 */
                var lat = position.coords.latitude;
@@ -286,7 +285,11 @@
           function getTodayData(){
             var date = new Date();
             var query = date.getYear() + '/' + (date.getMonth()+1) + '/' +date.getDay();
+            console.log(query);
             var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
             socket.emit('SQL_TODAY',query);
           }
      </script>
