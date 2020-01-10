@@ -317,9 +317,9 @@
                 today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
                 today_positions.push(today_position);
               }
-            for each(var pos in today_positions){
-              console.log(pos.lat());
-              console.log(pos.lng());
+            for (var i=0;i<100;i++){
+              console.log(today_positions[i].lat());
+              console.log(today_positions[i].lng());
             }
           }
      </script>
