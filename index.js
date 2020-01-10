@@ -62,7 +62,6 @@ function doRequest(req, res) {
             cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
           );
           res.writeHead(200, {'Content-Type': 'text/html'});
-          res.write(data);
           res.write('<hr>');
           console.log("ユーザ情報なし");
           console.log("user_id : " + user_id);

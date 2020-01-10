@@ -309,13 +309,12 @@
               }
               dt.setDate(dt.getDate() - 1);
             }
-            console.log(query);
             var c = 0
             for (var j = 0;j < today_dists.length;j++){
               c+= call_cal(today_dists[j]);
             }
             arr.push([query,c]);
-            arr.push([query,27]);
+            arr.push(['2020/1/09',27]);
             arr.push(['Date', 'kcal']);
             arr.reverse();
             var data = google.visualization.arrayToDataTable(arr);
@@ -356,11 +355,11 @@
             
               var today_positions = [];
             
-              for(var i=0;i<100;i++){
+              for(var i=0;i<today_lats.length;i++){
                 today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
                 today_positions.push(today_position);
               }
-            for (var i=0;i<100;i++){
+            for (var i=0;i<today_positions.length;i++){
               console.log(today_positions[i].lat());
               console.log(today_positions[i].lng());
             }
