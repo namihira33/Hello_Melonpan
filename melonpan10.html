@@ -312,6 +312,7 @@
      <script type="text/javascript">
           var intervalID;
           var second = 10;
+          var query;
 
           function setTimer() {
                var k = 1000;
@@ -326,7 +327,7 @@
        
           function getTodayData(){
             var date = new Date();
-            var query = date.getFullYear() + '/' + (date.getMonth()+1) + '/' +date.getDate();
+            query = date.getFullYear() + '/' + (date.getMonth()+1) + '/' +date.getDate();
             console.log(query);
             var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
