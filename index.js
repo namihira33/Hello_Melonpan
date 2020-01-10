@@ -121,7 +121,7 @@ socket.on('SQL_TODAY',function(data){
   console.log(query_str);
   client.query(query_str,(err,res) => {
     if(err) throw err;
-    for(let row of ews.rows){
+    for(let row of res.rows){
       console.log(JSON.stringfy(row));
     }
   })
