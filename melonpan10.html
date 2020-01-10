@@ -304,6 +304,14 @@
                 today_lngs = data.split(',');
                 console.log(today_lngs);
               });
+            
+              var today_positions = [];
+            
+              for(int i=0;i<100;i++){
+                today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
+                today_positions.push(today_position);
+              }
+            console.log(today_positios);
           }
      </script>
 
