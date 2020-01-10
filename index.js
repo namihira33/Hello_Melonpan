@@ -116,6 +116,15 @@ io.sockets.on('connection', function(socket) {
   
 socket.on('SQL_TODAY',function(data){
   console.log(data);
+  var query_str = '';
+  query_str += 'SELECT lat,lng FROM places WHERE date = ' + data + ';';
+  client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of ews.rows){
+      console.log(JSON.stringfy(row));
+    }
+  })
+  
 });
 
 /*
