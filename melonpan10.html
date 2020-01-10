@@ -80,7 +80,8 @@
                marker = new google.maps.Marker({
                     position: YourPosition,
                     map: map,
-                    title: "You are here."
+                    title: "You are here.",
+                    icon : 'cycle.png'
                });
                map.setCenter(YourPosition);
                var win_options = {
@@ -92,9 +93,9 @@
               var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + sumdist
 //              socket.emit('info',info);
 
-               /* デバッグ用のinfowindow */
+               /* デバッグ用のinfowindow 
                var infoWindow = new google.maps.InfoWindow(win_options);
-               infoWindow.open(map, marker);
+               infoWindow.open(map, marker); */
 
                positions.push(YourPosition);
 
