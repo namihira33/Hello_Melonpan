@@ -318,10 +318,18 @@
                 today_positions.push(today_position);
               }
             for (var i=0;i<100;i++){
-              console.log(today_positions[i].lat());
+              console.log(today_positions[i].lat();
               console.log(today_positions[i].lng());
             }
           }
+                lines3 = new google.maps.Polyline({
+                    path: positions,
+                    strokeColor: "FF0000",
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+               lines3.setMap(map);
      </script>
 
 </body>
