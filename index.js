@@ -37,7 +37,6 @@ function doRequest(req, res) {
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(data);
             res.write('<hr>');
-            res.write("user_id =" + cookies["user_id"] + "<br>");
             user_id = cookies["user_id"];
             console.log("ユーザ情報あり");
             console.log("user_id : " + user_id);
