@@ -77,12 +77,11 @@
 
 
                // 現在位置にマーカーを立てる -> 位置を決めて、インスタンスを作れば○
-               marker = new google.maps.Marker({
+/*               marker = new google.maps.Marker({
                     position: YourPosition,
                     map: map,
                     title: "You are here.",
-                    icon : "cycle.png"
-               });
+               }); */
                map.setCenter(YourPosition);
                var win_options = {
                     content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +
@@ -113,7 +112,6 @@
                //               var speed = position.coords.speed ;               // 速さは機能していないみたいです。
 
                /* 円の描き方 */
-               /*
                  var Circle = new google.maps.Circle({
                   strokeColor: '#FF0000',
                   strokeOpacity: 0.8,
@@ -123,7 +121,7 @@
                   map: map,
                   center: YourPosition,
                   radius: accuracy
-                }); */
+                }); 
 
                if (positions.length - 1 > 0) {
                     var originA = positions[positions.length - 2];
