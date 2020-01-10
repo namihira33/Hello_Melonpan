@@ -277,6 +277,7 @@
               }
               dt.setDate(dt.getDate() - 1);
             }
+            console.log(query);
             arr.push(['2020/1/9',27]);
             arr.push(['2020/1/10',70]);
             arr.push(['Date', 'kcal']);
@@ -328,7 +329,7 @@
           function getTodayData(){
             var date = new Date();
             query = date.getFullYear() + '/' + (date.getMonth()+1) + '/' +date.getDate();
-            console.log(query);
+            console.log('↓' + query);
             var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
                 console.log(data.message);
