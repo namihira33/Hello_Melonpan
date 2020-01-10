@@ -321,8 +321,7 @@
               console.log(today_positions[i].lat());
               console.log(today_positions[i].lng());
             }
-          }
-                lines3 = new google.maps.Polyline({
+            lines3 = new google.maps.Polyline({
                     path: today_positions,
                     strokeColor: "FF0000",
                     strokeOpacity: .7,
@@ -330,7 +329,8 @@
                });
 
                lines3.setMap(map);
-       }
+          }
+
      </script>
 
 </body>
