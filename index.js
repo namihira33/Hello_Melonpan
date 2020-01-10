@@ -116,6 +116,8 @@ io.sockets.on('connection', function(socket) {
   
 socket.on('SQL_TODAY',function(data){
   console.log(data);
+  var lats = '';
+  var lngs = '';
   var query_str = "";
   query_str += "SELECT lat,lng FROM places WHERE date=" + "'" + data + "';"
   console.log(query_str);
@@ -123,7 +125,12 @@ socket.on('SQL_TODAY',function(data){
     if(err) throw err;
     for(let row of res.rows){
       console.log(JSON.stringify(row));
+      lats += JSON.stringify(row)['lat'] + ',';
+      lngs += JSON.stringify(row)['lng'] + ',';
     }
+    var send_msg = lats.slice(0,-1) + ':' lngs.slize(0,-1);
+    console.log(send_msg);
+    
   });
   
 });
