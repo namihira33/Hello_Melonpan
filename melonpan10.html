@@ -205,13 +205,21 @@
                document.getElementById('speed').innerHTML = '速度 :' + c.v + 'km/h';
                document.getElementById('calory').innerHTML = '消費カロリー : ' + sum_calory + 'kcal';
           }
+       
+          function call_cal(dist){
+          var c = new Calc();
+               c.v = dist/(10*one_second) * 3600/1000;
+               c.vcalc(dist);
+               c.calorycalc();
+          
+              return c.calory;
+        }
 
-
-          var newData = []
-          var item = []
 
           // 計算機構
-          function calc_all() {
+/*               var newData = []
+                var item = []
+              function calc_all() {
                const fs = require('fs');
                const csvSync = require('csv-parse/lib/sync'); // requiring sync module
                let text = fs.readFileSync("test.csv", 'utf-8');
@@ -234,7 +242,7 @@
                     console.log(c.v);
                     console.log(c.calory);
                }
-          }
+          } */
 
           function mets(v) {
                if (v < 8900 / 60) {
@@ -254,6 +262,35 @@
                }
                return 10.0;
           }
+       
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+              var dt = new Date();
+              var arr = [];
+              for (i = 0;i<7;i++){
+              var c = 0;
+              var dtstr  = dt.toLocaleDateString()
+              console.log(dtstr);
+              if (c > 0){
+                arr.push([dtstr,c]);
+              }
+              dt.setDate(dt.getDate() - 1);
+            }
+            arr.push([query,100]);
+            arr.push(['2020/1/1',100]);
+            arr.push(['Date', 'kcal']);
+            arr.reverse();
+            var data = google.visualization.arrayToDataTable(arr);
+            var options = {
+              title: 'Performance',
+              hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+              vAxis: {minValue: 0}
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+            chart.draw(data, options);
+          }
+
      </script>
 </head>
 
