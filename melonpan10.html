@@ -5,6 +5,7 @@
 <head>
      <meta charset="utf-8" />
      <script src="/socket.io/socket.io.js"></script>
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script type="text/javascript">
           var map; /* Google Map インスタンス */
           var marker; /* marker のインスタンス */
@@ -267,6 +268,7 @@
      <div id="dist"></div>
      <div id="speed"></div>
      <div id="calory"></div>
+     <div id="chartW"></div>
 
      <!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
 
@@ -308,7 +310,7 @@
                 socket.on('SQL_TODAY_DIST', function(data, fn) {
                 console.log(data);
                 today_dists = data.split(',');
-                console.log(today_dist);
+                console.log(today_dists);
               });
             
               var today_positions = [];
