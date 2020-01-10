@@ -122,9 +122,9 @@ socket.on('SQL_TODAY',function(data){
   client.query(query_str,(err,res) => {
     if(err) throw err;
     for(let row of res.rows){
-      console.log(JSON.stringfy(row));
+      console.log(JSON.stringify(row));
     }
-  })
+  });
   
 });
 
