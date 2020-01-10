@@ -277,8 +277,8 @@
               }
               dt.setDate(dt.getDate() - 1);
             }
-            arr.push([query,100]);
-            arr.push(['2020/1/1',100]);
+            arr.push(['2020/1/9',27]);
+            arr.push(['2020/1/10',70]);
             arr.push(['Date', 'kcal']);
             arr.reverse();
             var data = google.visualization.arrayToDataTable(arr);
@@ -312,7 +312,7 @@
      <script type="text/javascript">
           var intervalID;
           var second = 10;
-          var query;
+          var query = '';
 
           function setTimer() {
                var k = 1000;
