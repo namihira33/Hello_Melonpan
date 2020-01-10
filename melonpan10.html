@@ -14,7 +14,7 @@
           var one_second = 1000; /* 1秒は1000ms */
           var today_lats = [];
           var today_lngs = [];
-          var today_dist = [];
+          var today_dists = [];
 
           var sum_calory = 0.0;
 
@@ -305,9 +305,9 @@
                 today_lngs = data.split(',');
                 console.log(today_lngs);
               });
-                socket.on('SQL_TODAY_DIS', function(data, fn) {
+                socket.on('SQL_TODAY_DIST', function(data, fn) {
                 console.log(data);
-                today_dist = data.split(',');
+                today_dists = data.split(',');
                 console.log(today_dist);
               });
             
