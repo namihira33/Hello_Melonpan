@@ -77,11 +77,16 @@
 
 
                // 現在位置にマーカーを立てる -> 位置を決めて、インスタンスを作れば○
-/*               marker = new google.maps.Marker({
+               marker = new google.maps.Marker({
                     position: YourPosition,
                     map: map,
                     title: "You are here.",
-               }); */
+                    icon: new google.maps.MarkerImage(
+                     'tyoko.png',
+                     new google.maps.Size(80,50),
+                    new google.maps.Point(0,0),
+                  )
+               });
                map.setCenter(YourPosition);
                var win_options = {
                     content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +
