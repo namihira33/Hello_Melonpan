@@ -128,8 +128,11 @@ socket.on('SQL_TODAY',function(data){
       lats += row['lat'] + ',';
       lngs += row['lng'] + ',';
     }
-    var send_msg = lats.slice(0,-1) + ':' +lngs.slice(0,-1);
-    console.log(send_msg);
+    var send_msg_lat = lats.slice(0,-1);
+    var send_msg_lng = lngs.slice(0,-1);
+
+    socket.emit('SQL_TODAY_LAT',send_msg_lat);
+    socket.emit('SQL_TODAY_LNG',send_msg_lng);
     
   });
   
