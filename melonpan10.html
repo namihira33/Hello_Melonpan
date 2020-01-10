@@ -80,12 +80,7 @@
                marker = new google.maps.Marker({
                     position: YourPosition,
                     map: map,
-                    title: "You are here.",
-                    icon: new google.maps.MarkerImage(
-                     'cycle.png',
-                     new google.maps.Size(80,50),
-                    new google.maps.Point(0,0),
-                  ),
+                    title: "You are here."
                });
                map.setCenter(YourPosition);
                var win_options = {
@@ -117,6 +112,7 @@
                //               var speed = position.coords.speed ;               // 速さは機能していないみたいです。
 
                /* 円の描き方 */
+              /*
                  var Circle = new google.maps.Circle({
                   strokeColor: '#FF0000',
                   strokeOpacity: 0.8,
@@ -126,7 +122,7 @@
                   map: map,
                   center: YourPosition,
                   radius: 10
-                }); 
+                }); */
 
                if (positions.length - 1 > 0) {
                     var originA = positions[positions.length - 2];
