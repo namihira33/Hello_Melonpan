@@ -14,6 +14,7 @@
           var one_second = 1000; /* 1秒は1000ms */
           var today_lats = [];
           var today_lngs = [];
+          var today_dist = [];
 
           var sum_calory = 0.0;
 
@@ -304,6 +305,11 @@
                 today_lngs = data.split(',');
                 console.log(today_lngs);
               });
+                socket.on('SQL_TODAY_DIS', function(data, fn) {
+                console.log(data);
+                today_dist = data.split(',');
+                console.log(today_dist);
+              });
             
               var today_positions = [];
             
@@ -311,7 +317,7 @@
                 today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
                 today_positions.push(today_position);
               }
-            for each(pos in today_positions){
+            for each(var pos in today_positions){
               console.log(pos.lat());
               console.log(pos.lng());
             }
