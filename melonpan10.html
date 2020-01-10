@@ -263,35 +263,6 @@
                return 10.0;
           }
        
-          google.charts.load('current', {'packages':['corechart']});
-          google.charts.setOnLoadCallback(drawChart);
-            function drawChart() {
-              var dt = new Date();
-              var arr = [];
-              for (i = 0;i<7;i++){
-              var c = 0;
-              var dtstr  = dt.toLocaleDateString()
-              console.log(dtstr);
-              if (c > 0){
-                arr.push([dtstr,c]);
-              }
-              dt.setDate(dt.getDate() - 1);
-            }
-            console.log(query);
-            arr.push([query,27]);
-            arr.push(['2020/1/10',70]);
-            arr.push(['Date', 'kcal']);
-            arr.reverse();
-            var data = google.visualization.arrayToDataTable(arr);
-            var options = {
-              title: 'Performance',
-              hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
-              vAxis: {minValue: 0}
-            };
-            var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
-            chart.draw(data, options);
-          }
-
      </script>
 </head>
 
@@ -324,6 +295,33 @@
           function stopTimer() {
                var k = 1000;
                clearInterval(intervalID);
+          }
+       
+          function drawChart() {
+              var dt = new Date();
+              var arr = [];
+              for (i = 0;i<7;i++){
+              var c = 0;
+              var dtstr  = dt.toLocaleDateString()
+              console.log(dtstr);
+              if (c > 0){
+                arr.push([dtstr,c]);
+              }
+              dt.setDate(dt.getDate() - 1);
+            }
+            console.log(query);
+            arr.push([query,27]);
+            arr.push(['2020/1/10',70]);
+            arr.push(['Date', 'kcal']);
+            arr.reverse();
+            var data = google.visualization.arrayToDataTable(arr);
+            var options = {
+              title: 'Performance',
+              hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+              vAxis: {minValue: 0}
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+            chart.draw(data, options);
           }
        
           function getTodayData(){
@@ -362,6 +360,11 @@
               console.log(today_positions[i].lat());
               console.log(today_positions[i].lng());
             }
+            
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+
+            
             lines3 = new google.maps.Polyline({
                     path: today_positions,
                     strokeColor: "FF0000",
