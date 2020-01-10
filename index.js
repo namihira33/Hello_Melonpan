@@ -128,7 +128,7 @@ socket.on('SQL_TODAY',function(data){
       lats += JSON.stringify(row)['lat'] + ',';
       lngs += JSON.stringify(row)['lng'] + ',';
     }
-    var send_msg = lats.slice(0,-1) + ':' lngs.slice(0,-1);
+    var send_msg = lats.slice(0,-1) + ':' +lngs.slice(0,-1);
     console.log(send_msg);
     
   });
