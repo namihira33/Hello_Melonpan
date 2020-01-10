@@ -35,6 +35,7 @@ function doRequest(req, res) {
           var cookies = cookie.parse(req.headers.cookie);
           if(cookies["user_id"] !== undefined){
             res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
             res.write('<hr>');
             res.write("user_id =" + cookies["user_id"] + "<br>");
             user_id = cookies["user_id"];
@@ -48,6 +49,7 @@ function doRequest(req, res) {
               cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
             );
             res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
             res.write('<hr>');
             console.log("ユーザ情報なし");
             console.log("user_id : " + user_id);            
@@ -60,6 +62,7 @@ function doRequest(req, res) {
             cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
           );
           res.writeHead(200, {'Content-Type': 'text/html'});
+          res.write(data);
           res.write('<hr>');
           console.log("ユーザ情報なし");
           console.log("user_id : " + user_id);
