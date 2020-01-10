@@ -310,13 +310,17 @@
               dt.setDate(dt.getDate() - 1);
             }
             console.log(query);
+            var c = 0
+            for (var j = 0,j < today_dists.length,j++){
+              c+= call_cal(today_dists[j]);
+            }
+            arr.push([query,c]);
             arr.push([query,27]);
-            arr.push(['2020/1/10',70]);
             arr.push(['Date', 'kcal']);
             arr.reverse();
             var data = google.visualization.arrayToDataTable(arr);
             var options = {
-              title: 'Performance',
+              title: 'kcal / days',
               hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
               vAxis: {minValue: 0}
             };
@@ -361,8 +365,8 @@
               console.log(today_positions[i].lng());
             }
             
-          google.charts.load('current', {'packages':['corechart']});
-          google.charts.setOnLoadCallback(drawChart);
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
 
             
             lines3 = new google.maps.Polyline({
