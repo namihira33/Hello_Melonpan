@@ -75,9 +75,12 @@ console.log(`Server running at ${port}/`);
 server.listen(port);
 
 io.sockets.on('connection', function(socket) {
+  /* 接続したら、'greeting'メッセージをやり取りする */
   socket.emit('greeting', {message: 'Connected'}, function (data) {
     console.log('result: ' + data);
   });
+  
+  /* HTML側から'info'メッセージが送られてくるのを待つ */
   socket.on('info',function(data){
     q_str = '';
     flag = false;
@@ -94,6 +97,7 @@ io.sockets.on('connection', function(socket) {
     q_str  += datas[3];
     q_str += "');";
     console.log(q_str + '\n');
+    /* SQLへのqueryの送り方 : errはエラーメッセージ resはクエリー格納後の答え */
     client.query(q_str,(err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
@@ -108,6 +112,10 @@ io.sockets.on('connection', function(socket) {
     });
 
 
+});
+  
+socket.on('SQL_TODAY',function(data){
+  console.log(data);
 });
 
 /*
