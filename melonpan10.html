@@ -11,7 +11,9 @@
           var num_str;
           var positions = []; /* 現在位置情報LatLng型の配列 */
           var sumdist = 0;
-          var one_second = 1000;
+          var one_second = 1000; /* 1秒は1000ms */
+          var today_lats = [];
+          var today_lngs = [];
 
           var sum_calory = 0.0;
 
@@ -294,9 +296,13 @@
             
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
                 console.log(data);
+                today_lats = data.split(',');
+                console.log(today_lats);
               });
                 socket.on('SQL_TODAY_LNG', function(data, fn) {
                 console.log(data);
+                today_lngs = data.sp;it(',');
+                console.log(today_lngs);
               });
           }
      </script>
