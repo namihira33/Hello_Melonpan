@@ -329,11 +329,12 @@
                 var dtstr  = dt.toLocaleDateString();
                 today_dists = [];
                 getDateData(dtstr);
+                console.log(today_dists);
                   for (var j = 0;j < today_dists.length;j++){
                   c+= call_cal(today_dists[j]);
                   }
                   arr.push([dtstr,c]);
-                  console.log(dtstr + c);
+                  console.log(dtstr + 'cal : ' c);
                 dt.setDate(dt.getDate() - 1);
             }
             arr.push(['Date', 'kcal']);
