@@ -30,6 +30,7 @@ function doRequest(req, res) {
 
     // コンテンツを表示する。
     function doReard(err, data) {
+      /* クッキーが登録されていたら、そのまま表示*/
         if(req.headers.cookie !== undefined) {
 				  // 設定されているCookieをブラウザに表示する
           var cookies = cookie.parse(req.headers.cookie);
@@ -40,20 +41,35 @@ function doRequest(req, res) {
             user_id = cookies["user_id"];
             console.log("ユーザ情報あり");
             console.log("user_id : " + user_id);
-          }else{
+          }
+          else{
+            /* クッキーが登録されていなかったら、クッキーに登録 + データベースに格納 */
+            /* ID生成 -> クッキー登録 */
             user_id = uuid.v1();
             res.setHeader("Set-Cookie", [
               cookie.serialize("user_id", user_id),
-              cookie.serialize("hoge1", "111", { maxAge:60 }),
-              cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
+              cookie.serialize("hoge1", "111", { maxAge:60 }) ]
             );
+            /* データベースに格納 */
+            q_str = '';
+            q_str += "INSERT INTO users VALUES('";
+            q_str += user_id;
+            q_str += "','";
+            q_str += user_id + '1';
+            q_str += "');";
+            client.query(q_str,(err, res) => {
+                if (err) throw err;
+                  for (let row of res.rows) {
+                      console.log(JSON.stringify(row));
+                  }});
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(data);
             res.write('<hr>');
             console.log("ユーザ情報なし");
             console.log("user_id : " + user_id);            
           }
-        }else {
+        }
+        else {
           user_id = uuid.v1();
           res.setHeader("Set-Cookie", [
             cookie.serialize("user_id", user_id),
