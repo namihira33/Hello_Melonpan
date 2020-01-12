@@ -16,7 +16,7 @@
           var today_lats = [];
           var today_lngs = [];
           var today_dists = [];
-          var today_distance = 0;
+          var today_distance = 15;
           var today_datas = [];
           
           var user_lats = [];
@@ -511,13 +511,16 @@
                 today_dists = data.split(',');
                 console.log(today_dists);
               });
-              /*    socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                  socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
                   console.log(data);
-              }); */
+                  if(data != null){
+                    today_distance = Number(data);
+                  }
+              }); 
               console.log(today_lngs);
               console.log(today_dists);
               console.log(Number(today_dists[0]));
-              arr.push([dtstr,Number(today_dists[0])]);
+              arr.push([dtstr,today_distance]);
               arr.push(['Date', 'kcal']);
               arr.reverse();
               console.log(arr);
