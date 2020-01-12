@@ -484,12 +484,10 @@
                 today_dists = data.split(',');
                 for (var j = 0;j < today_dists.length;j++){
                   c+= call_cal(today_dists[j]);
-                  console.log(today_dists[j]);
               }
-                arr.push([dtstr,10]);
+                arr.push(['2020/1/10',10]);
                 console.log(c);
                 console.log(dtstr);
-                console.log(today_dists);
               });
                 socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
                 today_distance = data;
