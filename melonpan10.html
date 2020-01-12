@@ -343,14 +343,14 @@
             }
             arr.push(['Date', 'kcal']);
             arr.reverse();
-            var data = google.visualization.arrayToDataTable(arr);
+            var data2 = google.visualization.arrayToDataTable(arr);
             var options = {
               title: 'kcal / days',
               hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
               vAxis: {minValue: 0}
             };
             var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
-            chart.draw(data, options);
+            chart.draw(data2, options);
           }
        
           function getTodayData(){
