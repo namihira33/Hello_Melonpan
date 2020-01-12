@@ -190,7 +190,7 @@
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
-                    this.calory = mets(this.v) * this.body * 1.05;
+                    this.calory = mets(this.v) * this.body * 1.05 /1000; 
                };
                this.vcalc = function (d) {
                     time = 10;
@@ -298,7 +298,7 @@
      <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
      <button class='btn btn-primary' type='button' onclick='getDateChart("2020/1/10");'>今日走った位置の描画</button>
-     <button class='btn btn-primary' type='button' onclick='getTodayData();'>自分の走った距離と経路</button>
+     <button class='btn btn-primary' type='button' onclick='getWeekChart();'>自分の走った距離と経路</button>
      
 
      <div id="dist"></div>
@@ -581,6 +581,57 @@
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
+              }
+       }
+       
+       function getDateData(date){
+         var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_TODAY',date);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+                socket.on('SQL_TODAY_DIST', function(data, fn) {
+                today_dists = data.split(',');
+                console.log(today_dists);
+              });
+                  socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                  console.log(data);
+                  if(data != null){
+                    today_distance = Number(data);
+                  }
+              }); 
+       }
+       
+       function getWeekChart(){
+              var dt = new Date();
+              var arr = [];
+              
+              for(int i=0;i<7;i++){
+              var dtstr  = dt.toLocaleDateString();                
+              getDateData(dtstr);
+              console.log(today_distance);
+              arr.push([dtstr,today_distance]);
+              arr.push(['Date', 'kcal']);
+              arr.reverse();
+              console.log(arr);
+              var data = google.visualization.arrayToDataTable(arr);
+              var options = {
+                title: 'kcal / days',
+                hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0}
+              };
+              var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+              chart.draw(data, options);
+              dt.setDate(dt.getDate() - 1);
               }
        }
        
