@@ -25,19 +25,18 @@
                          lat: 36.085824,
                          lng: 140.106081
                     },
-                    zoom: 14
+                    zoom: 14,
+                    mapTypeControl: false,
+                    streetViewControl: false
                });
+              var widgetDiv = document.getElementById("map-widget");
+              var widgetDiv2 = document.getElementById("map-widget2");
+              map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(widgetDiv);
+              map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(widgetDiv2);
           }
-          /* 現在位置を取得 */
+          /* 現在位置を取得 -> プレイヤーが動き出したらスタートするようにする*/
           function getCurrentPosition() {
                if (navigator.geolocation) {
-                    /* 高精度に現在位置を取得したいとき */
-                    /*var bHighAccuracy = document.getElementById('chxHighAccuracy').checked;
-                    var PositionOptions = {
-                         enableHighAccuracy: bHighAccuracy,
-                         timeout: 5000,
-                         maximumAge:Infinity
-                    };*/
 
                     /* 現在位置取得 */
                     navigator.geolocation.getCurrentPosition(success_func, error_func);
@@ -92,12 +91,12 @@
             
               /* 送信用の情報を作成 -> 送信 */
               var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + sumdist
-//              socket.emit('info',info);
 
-               /* デバッグ用のinfowindow 
+               /* デバッグ用のinfowindowの作り方 
                var infoWindow = new google.maps.InfoWindow(win_options);
                infoWindow.open(map, marker); */
 
+              /* 今の自分の位置をまとめたもの */
                positions.push(YourPosition);
 
                /* 線を引く := positionsに入っている配列の緯度経度を全部結ぶ */
@@ -109,9 +108,6 @@
                });
 
                lines.setMap(map);
-
-               //             var heading = position.coords.heading ;             // 0=北、90=東、180=南、270=西 ->向いている時期
-               //               var speed = position.coords.speed ;               // 速さは機能していないみたいです。
 
                /* 円の描き方 */
               /*
@@ -152,7 +148,7 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-                         document.getElementById('dist').innerHTML += '距離 : ' + distance; + 'm'
+                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 : </strong>' + distance; + 'm'
 
                          sumdist += distance;
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
@@ -197,7 +193,7 @@
 
           function calc_cal(dist){
                var c = new Calc();
-               c.v = (dist/10) * 3600/1000;
+               c.v = (dist/second) * 3600/1000;
                c.vcalc(dist);
                c.calorycalc();
 
@@ -205,11 +201,12 @@
 
                document.getElementById('speed').innerHTML = '速度 :' + c.v + 'km/h';
                document.getElementById('calory').innerHTML = '消費カロリー : ' + Math.round(sum_calory)*10/10 + 'kcal';
+               document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー : </strong>' + Math.round(sum_calory)*10/10 + 'kcal';
           }
        
           function call_cal(dist){
           var c = new Calc();
-               c.v = dist/(10*one_second) * 3600/1000;
+               c.v = (dist/second) * 3600/1000;
                c.vcalc(dist);
                c.calorycalc();
           
@@ -242,10 +239,57 @@
 </head>
 
 <body>
-     <div style="height:400px;100%" id="map_canvas"></div>
+    <style>
+    #map-widget {
+      background-color: #fff;
+      border-radius: 2px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+      font-size: 12px;
+      margin: 10px 10px 15px 10px;
+      padding: 9px 4px 9px 11px;
+      width: 22.5%;
+      text-align: left;
+     }
+    #map-widget2 {
+      background-color: #fff;
+      border-radius: 2px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+      font-size: 12px;
+      margin: 10px 10px 15px 10px;
+      padding: 9px 4px 9px 11px;
+      width: 22.5%;
+      text-align: left;
+     }
+      
+      .btn-primary {
+        display: inline-block;
+        padding: 0.3em 1em;
+        text-decoration: none;
+        color: #67c5ff;
+        border: solid 2px #67c5ff;
+        border-radius: 3px;
+        transition: .4s;
+      }
+
+      .btn-primary:hover {
+        background: #67c5ff;
+        color: white;
+      }
+     </style>
+     <div id="container" style="width: 90%;margin: 0 auto;text-align: center;">
+     <img src="ficle.png" style="max-width: 35%;text-align: center;">
+     <div style="height:460px;width: 90%;margin:0 auto;" id="map_canvas"></div>
+     <div id="map-widget">
+      <strong style="font-size:14px">距離 : </strong><br>
+     </div>
+     <div id="map-widget2">
+      <strong style="font-size:14px">消費カロリー : </strong><br>
+     </div>
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDq9Cjb-9mTgMGfSUzliGr6_j5k2kBkac&callback=initMap"
           async="" defer=""></script>
-     <br /><button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
+     <br />
+
+     <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
      <button class='btn btn-primary' type='button' onclick='getTodayData();'>今日走った位置の描画</button>
 
@@ -253,17 +297,17 @@
      <div id="speed"></div>
      <div id="calory"></div>
      <div id="chartW"></div>
+      </div>
 
      <!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
 
      <script type="text/javascript">
           var intervalID;
-          var second = 10;
+          var second = 5;
           var query = '';
 
           function setTimer() {
                var k = 1000;
-
                intervalID = setInterval(getCurrentPosition, second * k);
           }
 
