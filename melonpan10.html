@@ -494,7 +494,7 @@
               var dt = new Date();
               var arr = [];
               var dtstr  = dt.toLocaleDateString();
-              console.log('↓' + date);
+              console.log('↓' + dtstr);
               var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
                 console.log(data.message);
