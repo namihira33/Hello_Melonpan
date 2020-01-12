@@ -24,6 +24,7 @@
 
           var sum_calory = 0.0;
           var calory = 0;
+          var dt_str = '';
 
           function initMap() {
                map = new google.maps.Map(document.getElementById('map_canvas'), {
@@ -473,7 +474,8 @@
          
               for (i = 0;i<7;i++){
                 calory = 0;
-                var dtstr  = dt.toLocaleDateString();
+                dtstr  = dt.toLocaleDateString();
+                console.log(dtstr);
          
               var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
@@ -494,7 +496,7 @@
                 today_distance = data;
                 console.log(today_distance);
                 if(today_distance != null){
-                calory = call_cal(today_distance);
+                calory = call_cal(Number(today_distance));
                 }
                 else{
                   today_distance = 10;
