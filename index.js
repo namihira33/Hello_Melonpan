@@ -201,6 +201,32 @@ socket.on('SQL_USER',function(data){
   });
   
 });
+  
+socket.on('SQL_WEEK',function(data){
+  console.log(data);
+  var dt = new Date();
+  var query_str = "";
+  var dists = '';
+  
+  for(var i=0;i<7;i++){
+      query_str = "";
+      var dtstr  = dt.toLocaleDateString();
+      query_str += "SELECT sum(distance) FROM places WHERE date=" + "'" + dtstr + "';";
+      client.query(query_str,(err,res) => {
+        if(err) throw err;
+        for(let row of res.rows){
+          console.log(JSON.stringify(row));
+          dists += row['sum'] + ',';
+    }
+
+  });
+    
+      dt.setDate(dt.getDate() - 1);
+  }
+  var send_msg_dist = dists.slice(0,-1);
+  socket.emit('SQL_WEEK_DIST',send_msg_dist); 
+  
+});
 
 /*
 io.sockets.on('disconnection',function(){

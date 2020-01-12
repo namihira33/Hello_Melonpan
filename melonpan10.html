@@ -18,6 +18,7 @@
           var today_dists = [];
           var today_distance = 15;
           var today_datas = [];
+          var week_dists = [];
           
           var user_lats = [];
           var user_lngs = [];
@@ -620,21 +621,17 @@
        function getWeekChart(){
               var dt = new Date();
               var arr = [];
-              var i = 0;
-              
-              function re(){
-              if(i>7) return;
-              var dtstr  = dt.toLocaleDateString();                
-              getDateData(dtstr);
-              console.log(today_distance);
-              arr.push([dtstr,today_distance]);
-              dt.setDate(dt.getDate() - 1);
-              i+=1;
-              setTimeout(function(){ 
-                re();
-              }, 100);
-                
-              }
+              var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_WEEK','week');
+         
+                socket.on('SQL_WEEK_DIST', function(data, fn) {
+                week_dists = data.split(',');
+                console.log(week_dists);
+              });
+ 
               arr.push(['Date', 'kcal']);
               arr.reverse();
               console.log(arr);
