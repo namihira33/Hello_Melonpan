@@ -475,7 +475,6 @@
          
               for (i = 0;i<7;i++){
                 calory = 0;
-                dtstr  = dt.toLocaleDateString();
                 console.log(dtstr);
          
               var socket = io.connect();
@@ -506,6 +505,7 @@
                   console.log(today_distance);
                   arr.push([dtstr,Number(today_distance)]);
                   dt.setDate(dt.getDate() - 1);
+                  dtstr  = dt.toLocaleDateString();
                 });
        }
             arr.push(['Date', 'kcal']);
