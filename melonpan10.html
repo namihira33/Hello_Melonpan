@@ -482,21 +482,19 @@
               });
                 socket.on('SQL_TODAY_DIST', function(data, fn) {
                 today_dists = data.split(',');
-                for (var j = 0;j < today_dists.length;j++){
-                  c+= call_cal(today_dists[j]);
-              }
-                if(c>0){
-                  arr.push(dtstr,c);
-                }
-                c = 0;
-                console.log(c);
-                console.log(dtstr);
               });
                 socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
                 today_distance = data;
                 console.log(today_distance);
+                if(today_distance != null){
+                c = call_cal(today_distance);
+                }
               });
-         
+              if(c>0){
+                  console.log(dtstr);
+                  console.log(c);
+                  arr.push(dtstr,c);
+                }
             dt.setDate(dt.getDate() - 1);
        }
             arr.push(['Date', 'kcal']);
