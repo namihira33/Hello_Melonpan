@@ -488,7 +488,7 @@
        
        function getTodayChart(){
             google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
+            google.charts.setOnLoadCallback(drawTodayChart);
          
             function drawTodayChart() {
               var dt = new Date();
