@@ -182,11 +182,11 @@
 
           function Calc() {
                this.calory = 0;
-               this.body = 58;
+               this.body = 58; /* 体重 (km) */
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
-                    this.calory = mets(this.v) * this.body * time/3600 * 1.05;
+                    this.calory = mets(this.v) * this.body * 1.05;
                };
                this.vcalc = function (d) {
                     time = 10;
@@ -217,19 +217,22 @@
         }
 
           function mets(v) {
-               if (v < 8900 / 60) {
+               if(v < 5.0){
+                 return 0.0;
+               }
+               if (v < 8.9) {
                     return 3.5;
                }
-               if (v < 15100 / 60) {
+               if (v < 15.100) {
                     return 5.8;
                }
-               if (v < 16100 / 60) {
+               if (v < 16.100) {
                     return 6.3;
                }
-               if (v < 19200 / 60) {
+               if (v < 19.200) {
                     return 6.8;
                }
-               if (v < 22400 / 60) {
+               if (v < 22.400) {
                     return 8.0;
                }
                return 10.0;
