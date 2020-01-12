@@ -499,19 +499,19 @@
                 console.log(today_distance);
                 if(today_distance != null){
                 calory = call_cal(Number(today_distance));
+                today_distance = Number(data);
                 }
                 else{
                   today_distance = 10;
                 }
 
                   console.log(today_distance);
-                  arr.push([dtstr,Number(today_distance)]);
-                  dt.setDate(dt.getDate() - 1);
-                  dtstr  = dt.toLocaleDateString();
+                  arr.push([dtstr,today_distance]);
                 });
+            dt.setDate(dt.getDate() - 1);
        }
- /*           arr.push(['Date', 'kcal']);
-            arr.reverse(); */
+            arr.push(['Date', 'kcal']);
+            arr.reverse(); 
               
             console.log(arr);
          
@@ -521,7 +521,6 @@
               hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
               vAxis: {minValue: 0}
             };
-         
          
             var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
             chart.draw(data, options);
