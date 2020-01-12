@@ -620,6 +620,7 @@
               getDateData(dtstr);
               console.log(today_distance);
               arr.push([dtstr,today_distance]);
+              }
               arr.push(['Date', 'kcal']);
               arr.reverse();
               console.log(arr);
@@ -632,7 +633,6 @@
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
               dt.setDate(dt.getDate() - 1);
-              }
        }
        
 
