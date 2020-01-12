@@ -37,7 +37,6 @@ function doRequest(req, res) {
           if(cookies["user_id"] !== undefined){
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(data);
-            res.write('<hr>');
             user_id = cookies["user_id"];
             console.log("ユーザ情報あり");
             console.log("user_id : " + user_id);
@@ -64,7 +63,6 @@ function doRequest(req, res) {
                   }});
             res.writeHead(200, {'Content-Type': 'text/html'});
             res.write(data);
-            res.write('<hr>');
             console.log("ユーザ情報なし");
             console.log("user_id : " + user_id);            
           }
@@ -78,7 +76,6 @@ function doRequest(req, res) {
           );
           res.writeHead(200, {'Content-Type': 'text/html'});
           res.write(data);
-          res.write('<hr>');
           console.log("ユーザ情報なし");
           console.log("user_id : " + user_id);
   			}

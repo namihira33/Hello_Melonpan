@@ -152,7 +152,7 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-                         document.getElementById('dist').innerHTML += '距離 : ' + distance.toString; + 'm'
+                         document.getElementById('dist').innerHTML += '距離 : ' + distance; + 'm'
 
                          sumdist += distance;
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
