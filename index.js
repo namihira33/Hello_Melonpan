@@ -177,7 +177,7 @@ socket.on('SQL_USER',function(data){
     
   });
   
-    query_str = "SELECT SUM(disrance) FROM places WHERE uid=" + "'" + user_id + "';"
+    query_str = "SELECT SUM(distance) FROM places WHERE uid=" + "'" + user_id + "';"
     client.query(query_str,(err,res) => {
     if(err) throw err;
     for(let row of res.rows){
