@@ -23,6 +23,7 @@
           var user_distance = 0;
 
           var sum_calory = 0.0;
+          var calory = 0;
 
           function initMap() {
                map = new google.maps.Map(document.getElementById('map_canvas'), {
@@ -294,7 +295,7 @@
 
      <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
-     <button class='btn btn-primary' type='button' onclick='getTodayData();'>今日走った位置の描画</button>
+     <button class='btn btn-primary' type='button' onclick='getChart();'>今日走った位置の描画</button>
      <button class='btn btn-primary' type='button' onclick='getUserData();'>自分の走った距離と経路</button>
      
 
@@ -459,13 +460,19 @@
             lines3.setMap(map);
           }
        
-       function drawWeekChart(){
+
+       
+       function getChart(){
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawWeekChart);
+         
+            function drawWeekChart(){
          
               var dt = new Date();
               var arr = [];
          
               for (i = 0;i<7;i++){
-                var c = 0;
+                calory = 0;
                 var dtstr  = dt.toLocaleDateString();
          
               var socket = io.connect();
@@ -487,12 +494,12 @@
                 today_distance = data;
                 console.log(today_distance);
                 if(today_distance != null){
-                c = call_cal(today_distance);
+                calory = call_cal(today_distance);
                 }
               });
-              if(c>0){
+              if(calory>0){
                   console.log(dtstr);
-                  console.log(c);
+                  console.log(calory);
                   arr.push(dtstr,c);
                 }
             dt.setDate(dt.getDate() - 1);
@@ -511,10 +518,6 @@
             var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
             chart.draw(data, options);
        }
-       
-       function getChart(){
-            google.charts.load('current', {'packages':['corechart']});
-            google.charts.setOnLoadCallback(drawWeekChart);
        }
        
         function drawChart() {
