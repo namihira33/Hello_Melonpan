@@ -153,6 +153,43 @@ socket.on('SQL_TODAY',function(data){
   });
   
 });
+  
+socket.on('SQL_USER',function(data){
+  console.log(data);
+  var lats = '';
+  var lngs = '';
+  var dists = '';
+  var query_str = "";
+  query_str += "SELECT lat,lng FROM places WHERE uid=" + "'" + user_id + "';"
+  console.log(query_str);
+  client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of res.rows){
+      console.log(JSON.stringify(row));
+      lats += row['lat'] + ',';
+      lngs += row['lng'] + ',';
+    }
+    var send_msg_lat = lats.slice(0,-1);
+    var send_msg_lng = lngs.slice(0,-1);
+
+    socket.emit('SQL_USER_LAT',send_msg_lat);
+    socket.emit('SQL_USER_LNG',send_msg_lng);
+    
+  });
+  
+    query_str = "SELECT SUM(disrance) FROM places WHERE uid=" + "'" + user_id + "';"
+    client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of res.rows){
+      console.log(JSON.stringify(row));
+      dists += row['sum'];
+    }
+
+    socket.emit('SQL_USER_DIST',dists);
+    
+  });
+  
+});
 
 /*
 io.sockets.on('disconnection',function(){
