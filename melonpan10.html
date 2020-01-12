@@ -294,7 +294,7 @@
 
      <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
-     <button class='btn btn-primary' type='button' onclick='getTodayData();'>今日走った位置の描画</button>
+     <button class='btn btn-primary' type='button' onclick='drawChart();'>今日走った位置の描画</button>
      <button class='btn btn-primary' type='button' onclick='getUserData();'>自分の走った距離と経路</button>
      
 
@@ -341,8 +341,6 @@
             for (var j = 0;j < today_dists.length;j++){
               c+= call_cal(today_dists[j]);
             }
-            arr.push([query,c]);
-            arr.push(['2020/1/09',27]);
             arr.push(['Date', 'kcal']);
             arr.reverse();
             var data = google.visualization.arrayToDataTable(arr);
