@@ -160,7 +160,7 @@ socket.on('SQL_TODAY',function(data){
       distance = row['sum'];
     }
 
-    socket.emit('SQL_TODAY_SUM_DIST',dists);
+    socket.emit('SQL_TODAY_SUM_DIST',distance);
   
     });
 });
