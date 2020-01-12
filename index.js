@@ -216,7 +216,12 @@ socket.on('SQL_WEEK',function(data){
         if(err) throw err;
         for(let row of res.rows){
           console.log(JSON.stringify(row));
+          if(row['sum'] != null){
           dists += row['sum'] + ',';
+          }
+          else{
+            dists += '0,';
+          }
     }
 
   });
