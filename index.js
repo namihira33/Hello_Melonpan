@@ -131,6 +131,7 @@ socket.on('SQL_TODAY',function(data){
   var lats = '';
   var lngs = '';
   var dists = '';
+  var distance = 0;
   var query_str = "";
   query_str += "SELECT lat,lng,distance FROM places WHERE date=" + "'" + data + "';";
   console.log(query_str);
@@ -156,7 +157,7 @@ socket.on('SQL_TODAY',function(data){
     if(err) throw err;
     for(let row of res.rows){
       console.log(JSON.stringify(row));
-      dists += row['sum'];
+      distance = row['sum'];
     }
 
     socket.emit('SQL_TODAY_SUM_DIST',dists);
