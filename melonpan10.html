@@ -294,7 +294,7 @@
 
      <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
-     <button class='btn btn-primary' type='button' onclick='drawChart();'>今日走った位置の描画</button>
+     <button class='btn btn-primary' type='button' onclick='getChart();'>今日走った位置の描画</button>
      <button class='btn btn-primary' type='button' onclick='getUserData();'>自分の走った距離と経路</button>
      
 
@@ -337,20 +337,16 @@
                 }
                 dt.setDate(dt.getDate() - 1);
             }
-            var c = 0
-            for (var j = 0;j < today_dists.length;j++){
-              c+= call_cal(today_dists[j]);
-            }
             arr.push(['Date', 'kcal']);
             arr.reverse();
-            var data2 = google.visualization.arrayToDataTable(arr);
+            var data = google.visualization.arrayToDataTable(arr);
             var options = {
               title: 'kcal / days',
               hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
               vAxis: {minValue: 0}
             };
             var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
-            chart.draw(data2, options);
+            chart.draw(data, options);
           }
        
           function getTodayData(){
@@ -490,6 +486,11 @@
 
             lines3.setMap(map);
           }
+       
+       function getChart(){
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+       }
 
      </script>
 
