@@ -16,10 +16,11 @@
           var today_lats = [];
           var today_lngs = [];
           var today_dists = [];
+          var tofay_distance = 0;
           
           var user_lats = [];
           var user_lngs = [];
-          var user_dists = 0;
+          var user_distance = 0;
 
           var sum_calory = 0.0;
 
@@ -427,8 +428,8 @@
                 console.log(today_dists);
               });
                 socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
-                today_dists = data;
-                console.log(today_dists);
+                today_distance = data;
+                console.log(today_distance);
               });
             
               var today_positions = [];
@@ -463,7 +464,8 @@
                 console.log(user_lngs);
               });
                 socket.on('SQL_USER_DIST', function(data, fn) {
-                console.log(user_dists);
+                user_distance = data;
+                console.log(user_distance);
               });
             
               var user_positions = [];
