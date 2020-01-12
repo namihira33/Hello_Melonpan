@@ -153,7 +153,7 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 : </strong>' + distance + 'm';
+                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + distance + 'm';
 
                          sumdist += distance;
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
@@ -204,7 +204,7 @@
 
                sum_calory += c.calory;
 
-               document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー : </strong>' + Math.round(sum_calory)*10/10 + 'kcal';
+               document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(sum_calory)*10/10 + 'kcal';
           }
        
           function call_cal(dist){
@@ -328,7 +328,7 @@
                 var c = 0
                 var dtstr  = dt.toLocaleDateString();
                 today_dists = [];
-                getDateData(dtstr);
+                console.log(getDateData(dtstr));
                 console.log(today_dists);
                   for (var j = 0;j < today_dists.length;j++){
                   c+= call_cal(today_dists[j]);
@@ -425,6 +425,8 @@
                 today_distance = data;
                 console.log(today_distance);
               });
+          
+              return today_dists;
             
               var today_positions = [];
             
