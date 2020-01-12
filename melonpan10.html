@@ -513,17 +513,10 @@
                 today_dists = data.split(',');
                 console.log(today_dists);
               });
-                socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
-                if(data != null){
-                  today_distance = Number(data);
-                  console.log(today_distance);
-                }
-                else{
-                  today_distance = 15;
-                }
-                console.log(today_distance);
-                arr.push([dtstr,today_distance]);
-              });
+              /*    socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                  console.log(data);
+              }); */
+              arr.push(dtstr,today_dists[0]);
               arr.push(['Date', 'kcal']);
               arr.reverse();
               console.log(arr);

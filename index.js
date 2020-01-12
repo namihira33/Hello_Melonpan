@@ -152,7 +152,7 @@ socket.on('SQL_TODAY',function(data){
     socket.emit('SQL_TODAY_DIST',send_msg_dist);    
   });
   
-    query_str = "SELECT SUM(distance) FROM places WHERE date=" + "'" + data + "';";
+ /*   query_str = "SELECT SUM(distance) FROM places WHERE date=" + "'" + data + "';";
     client.query(query_str,(err,res) => {
     if(err) throw err;
     for(let row of res.rows){
@@ -162,7 +162,7 @@ socket.on('SQL_TODAY',function(data){
 
     socket.emit('SQL_TODAY_SUM_DIST',distance);
   
-    });
+    });*/
 });
   
 socket.on('SQL_USER',function(data){
