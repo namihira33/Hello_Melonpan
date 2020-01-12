@@ -132,7 +132,7 @@ socket.on('SQL_TODAY',function(data){
   var lngs = '';
   var dists = '';
   var query_str = "";
-  query_str += "SELECT lat,lng,distance FROM places WHERE date=" + "'" + data + "';"
+  query_str += "SELECT lat,lng FROM places WHERE date=" + "'" + data + "';"
   console.log(query_str);
   client.query(query_str,(err,res) => {
     if(err) throw err;
@@ -140,17 +140,24 @@ socket.on('SQL_TODAY',function(data){
       console.log(JSON.stringify(row));
       lats += row['lat'] + ',';
       lngs += row['lng'] + ',';
-      dists += row['distance'] + ',';
     }
     var send_msg_lat = lats.slice(0,-1);
     var send_msg_lng = lngs.slice(0,-1);
-    var send_msg_dists = dists.slice(0,-1);
 
     socket.emit('SQL_TODAY_LAT',send_msg_lat);
     socket.emit('SQL_TODAY_LNG',send_msg_lng);
-    socket.emit('SQL_TODAY_DIST',send_msg_dists);
     
   });
+  
+    query_str = "SELECT SUM(distance) FROM places WHERE date=" + "'" + data + "';"
+    client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of res.rows){
+      console.log(JSON.stringify(row));
+      dists += row['sum'];
+    }
+
+    socket.emit('SQL_TODAY_DIST',dists);
   
 });
   
