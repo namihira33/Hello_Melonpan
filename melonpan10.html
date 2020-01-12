@@ -63,7 +63,8 @@
                /* LatLng型の場合、LatLng.lat() や LatLng.lng()でそれぞれの数値を取ってこれる */
                var YourPosition = new google.maps.LatLng(lat, lng);
                var now = new Date(position.timestamp); // 取得時間
-               now_str = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() ;
+               now_str = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate() + '/'
+               +now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() ;
 
                /* 前位置にあったマーカーを消去 */
                function deleteMakers() {
@@ -151,8 +152,7 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-                         document.getElementById('dist').innerHTML = 'これだけ漕いだ : ' + sumdist + 'm';
-                         document.getElementById('dist').innerHTML += '\n 速さはこれだけ : ' + Number.parseFloat (distance / 10 *3600/1000) + 'km/h = ' + distance / 10 * 60 + 'm/min = ' + distance / (10*one_second) + 'm/s';
+                         document.getElementById('dist').innerHTML += '距離 : ' + distance.toString; + 'm'
 
                          sumdist += distance;
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
@@ -197,14 +197,14 @@
 
           function calc_cal(dist){
                var c = new Calc();
-               c.v = dist/(10*one_second) * 3600/1000;
+               c.v = (dist/10) * 3600/1000;
                c.vcalc(dist);
                c.calorycalc();
 
                sum_calory += c.calory;
 
                document.getElementById('speed').innerHTML = '速度 :' + c.v + 'km/h';
-               document.getElementById('calory').innerHTML = '消費カロリー : ' + sum_calory + 'kcal';
+               document.getElementById('calory').innerHTML = '消費カロリー : ' + Math.round(sum_calory)*10/10 + 'kcal';
           }
        
           function call_cal(dist){
@@ -215,35 +215,6 @@
           
               return c.calory;
         }
-
-
-          // 計算機構
-/*               var newData = []
-                var item = []
-              function calc_all() {
-               const fs = require('fs');
-               const csvSync = require('csv-parse/lib/sync'); // requiring sync module
-               let text = fs.readFileSync("test.csv", 'utf-8');
-               newData = csvSync(text);
-
-               console.log('newDataはありますか？');
-               console.log(newData);
-               for (var i = 0; i < newData.length - 1; i++) {
-                    var r = 6378.137 * 1000;
-                    var x1 = newData[i][0];
-                    var x2 = newData[i + 1][0];
-                    var y1 = newData[i][1];
-                    var y2 = newData[i + 1][1];
-                    var d = r * Math.acos(Math.sin(y1) * Math.sin(y2) + Math.cos(y1) * Math.cos(y2) * Math.cos(x2 -
-                    x1));
-                    var time = 0.5;
-                    var c = new Calc();
-                    c.vcalc(d);
-                    c.calorycalc();
-                    console.log(c.v);
-                    console.log(c.calory);
-               }
-          } */
 
           function mets(v) {
                if (v < 8900 / 60) {
