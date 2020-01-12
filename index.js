@@ -132,7 +132,7 @@ socket.on('SQL_TODAY',function(data){
   var lngs = '';
   var dists = '';
   var query_str = "";
-  query_str += "SELECT lat,lng FROM places WHERE date=" + "'" + data + "';"
+  query_str += "SELECT lat,lng FROM places WHERE date=" + "'" + data + "';";
   console.log(query_str);
   client.query(query_str,(err,res) => {
     if(err) throw err;
@@ -149,7 +149,7 @@ socket.on('SQL_TODAY',function(data){
     
   });
   
-    query_str = "SELECT SUM(distance) FROM places WHERE date=" + "'" + data + "';"
+    query_str = "SELECT SUM(distance) FROM places WHERE date=" + "'" + data + "';";
     client.query(query_str,(err,res) => {
     if(err) throw err;
     for(let row of res.rows){
@@ -159,6 +159,7 @@ socket.on('SQL_TODAY',function(data){
 
     socket.emit('SQL_TODAY_DIST',dists);
   
+    });
 });
   
 socket.on('SQL_USER',function(data){
@@ -167,7 +168,7 @@ socket.on('SQL_USER',function(data){
   var lngs = '';
   var dists = '';
   var query_str = "";
-  query_str += "SELECT lat,lng FROM places WHERE uid=" + "'" + user_id + "';"
+  query_str += "SELECT lat,lng FROM places WHERE uid=" + "'" + user_id + "';";
   console.log(query_str);
   client.query(query_str,(err,res) => {
     if(err) throw err;
@@ -184,7 +185,7 @@ socket.on('SQL_USER',function(data){
     
   });
   
-    query_str = "SELECT SUM(distance) FROM places WHERE uid=" + "'" + user_id + "';"
+    query_str = "SELECT SUM(distance) FROM places WHERE uid=" + "'" + user_id + "';";
     client.query(query_str,(err,res) => {
     if(err) throw err;
     for(let row of res.rows){
