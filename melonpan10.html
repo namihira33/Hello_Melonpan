@@ -620,12 +620,14 @@
        function getWeekChart(){
               var dt = new Date();
               var arr = [];
+              var i = 0;
               
               for(var i=0;i<7;i++){
               var dtstr  = dt.toLocaleDateString();                
               getDateData(dtstr);
               console.log(today_distance);
               arr.push([dtstr,today_distance]);
+              dt.setDate(dt.getDate() - 1);
               }
               arr.push(['Date', 'kcal']);
               arr.reverse();
@@ -638,7 +640,6 @@
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
-              dt.setDate(dt.getDate() - 1);
        }
        
 
