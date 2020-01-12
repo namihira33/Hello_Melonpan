@@ -210,7 +210,7 @@ socket.on('SQL_WEEK',function(data){
   
   for(var i=0;i<7;i++){
       query_str = "";
-      var dtstr  = dt.toLocaleDateString();
+      var dtstr  = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
       console.log(dtstr);
       query_str += "SELECT sum(distance) FROM places WHERE date=" + "'" + dtstr + "';";
       client.query(query_str,(err,res) => {
