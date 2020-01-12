@@ -17,6 +17,7 @@
           var today_lngs = [];
           var today_dists = [];
           var tofay_distance = 0;
+          var today_datas = [];
           
           var user_lats = [];
           var user_lngs = [];
@@ -504,8 +505,8 @@
 
                   console.log(today_distance);
                   arr.push([dtstr,Number(today_distance)]);
+                  dt.setDate(dt.getDate() - 1);
                 });
-            dt.setDate(dt.getDate() - 1);
        }
             arr.push(['Date', 'kcal']);
             arr.reverse();
