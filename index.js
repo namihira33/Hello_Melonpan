@@ -4,6 +4,7 @@ const cookie = require('cookie');
 const uuid = require('node-uuid');
 const { Client } = require('pg');
 const port = process.env.PORT || 8000;
+const imaging_the_future = new Date(2045,3,11);
 var fs = require('fs');
 var server = http.createServer();
 var temp;
@@ -46,8 +47,8 @@ function doRequest(req, res) {
             /* ID生成 -> クッキー登録 */
             user_id = uuid.v1();
             res.setHeader("Set-Cookie", [
-              cookie.serialize("user_id", user_id),
-              cookie.serialize("hoge1", "111", { maxAge:60 }) ]
+              cookie.serialize("user_id", user_id,{ 
+                expires:imaging_the_future }),]
             );
             /* データベースに格納 */
             q_str = '';
@@ -70,9 +71,8 @@ function doRequest(req, res) {
         else {
           user_id = uuid.v1();
           res.setHeader("Set-Cookie", [
-            cookie.serialize("user_id", user_id),
-            cookie.serialize("hoge1", "111", { maxAge:60 }),
-            cookie.serialize("hoge2", "あいうえお", { maxAge:60 }) ]
+            cookie.serialize("user_id", user_id,{ 
+                expires:imaging_the_future })]
           );
           res.writeHead(200, {'Content-Type': 'text/html'});
           res.write(data);
