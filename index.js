@@ -207,6 +207,7 @@ socket.on('SQL_WEEK',function(data){
   var dt = new Date();
   var query_str = "";
   var dists = '';
+  var j = 0;
   
   for(var i=0;i<7;i++){
       query_str = "";
@@ -214,6 +215,7 @@ socket.on('SQL_WEEK',function(data){
       console.log(dtstr);
       query_str += "SELECT sum(distance) FROM places WHERE date=" + "'" + dtstr + "';";
       client.query(query_str,(err,res) => {
+        j += 1;
         if(err) throw err;
         for(let row of res.rows){
           console.log(JSON.stringify(row));
@@ -224,11 +226,10 @@ socket.on('SQL_WEEK',function(data){
           else{
             dists += '0,';
           }
-          if(i==6){
-            var send_msg_dist = dists.slice(0,-1);
-            console.log(send_msg_dist);            
-            socket.emit('SQL_WEEK_DIST',send_msg_dist); 
+          if(j > 6){
+            console.log(dists.slice(0,-1));
           }
+          console.log(j);
     }
 
   });
