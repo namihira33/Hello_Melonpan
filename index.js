@@ -228,8 +228,9 @@ socket.on('SQL_WEEK',function(data){
           }
           if(j > 6){
             console.log(dists.slice(0,-1));
+            var send_msg_dist = dists.slice(0,-1);
+            socket.emit('SQL_WEEK_DIST',send_msg_dist);
           }
-          console.log(j);
     }
 
   });
