@@ -1,0 +1,670 @@
+
+<html>
+
+<head>
+     <meta charset="utf-8" />
+     <script src="/socket.io/socket.io.js"></script>
+     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+     <script type="text/javascript">
+          var map; /* Google Map インスタンス */
+          var marker; /* marker のインスタンス */
+          var num_str;
+          var positions = []; /* 現在位置情報LatLng型の配列 */
+          var sumdist = 0;
+          var one_second = 1000; /* 1秒は1000ms */
+          var today_lats = [];
+          var today_lngs = [];
+          var today_dists = [];
+          var today_distance = 15;
+          var today_datas = [];
+          var week_dists = [];
+          
+          var user_lats = [];
+          var user_lngs = [];
+          var user_distance = 0;
+
+          var sum_calory = 0.0;
+          var calory = 0;
+          var dtstr = '';
+
+          function initMap() {
+               map = new google.maps.Map(document.getElementById('map_canvas'), {
+                    center: {
+                         lat: 36.085824,
+                         lng: 140.106081
+                    },
+                    zoom: 14,
+                    mapTypeControl: false,
+                    streetViewControl: false
+               });
+              var widgetDiv = document.getElementById("map-widget");
+              var widgetDiv2 = document.getElementById("map-widget2");
+              map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(widgetDiv);
+              map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(widgetDiv2);
+          }
+          /* 現在位置を取得 -> プレイヤーが動き出したらスタートするようにする*/
+          function getCurrentPosition() {
+               if (navigator.geolocation) {
+
+                    /* 現在位置取得 */
+                    navigator.geolocation.getCurrentPosition(success_func, error_func);
+               } else {
+                    alert('Geolocation を利用できません');
+               }
+          }
+          /* 成功したときの処理 -> 緯度・経度・時間を取得 */
+          function success_func(position) {
+              var socket = io.connect();
+              var inf_str = '';
+
+              socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+               /* 取得情報の整理 */
+               var lat = position.coords.latitude;
+               var lng = position.coords.longitude;
+
+               var test_origin = new google.maps.LatLng(36.098174, 140.100769);
+               var test_destination = new google.maps.LatLng(36.097940, 140.100827);
+
+               /* LatLng型の場合、LatLng.lat() や LatLng.lng()でそれぞれの数値を取ってこれる */
+               var YourPosition = new google.maps.LatLng(lat, lng);
+               var now = new Date(position.timestamp); // 取得時間
+               now_str = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate(); 
+                 /*+ '/' +now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() */
+
+               /* 前位置にあったマーカーを消去 */
+               function deleteMakers() {
+                    if (marker != null) {
+                         marker.setMap(null);
+                    }
+                    marker = null;
+               }
+
+               deleteMakers();
+
+
+               // 現在位置にマーカーを立てる -> 位置を決めて、インスタンスを作れば○
+               marker = new google.maps.Marker({
+                    position: YourPosition,
+                    map: map,
+                    title: "You are here.",
+                    icon: 'https://www.u.tsukuba.ac.jp/~s1913566/media/cycle.png'
+               });
+               map.setCenter(YourPosition);
+               var win_options = {
+                    content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +
+                         '<br />取得時間：' + now_str + '<br />' + sumdist + 'm'
+               };
+            
+              /* 送信用の情報を作成 -> 送信 */
+              var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + sumdist
+
+               /* デバッグ用のinfowindowの作り方 
+               var infoWindow = new google.maps.InfoWindow(win_options);
+               infoWindow.open(map, marker); */
+
+              /* 今の自分の位置をまとめたもの */
+               positions.push(YourPosition);
+
+               /* 線を引く := positionsに入っている配列の緯度経度を全部結ぶ */
+               lines = new google.maps.Polyline({
+                    path: positions,
+                    strokeColor: "FF0000",
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+               lines.setMap(map);
+
+               /* 円の描き方 */
+              /*
+                 var Circle = new google.maps.Circle({
+                  strokeColor: '#FF0000',
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: '#FF0000',
+                  fillOpacity: 0.35,
+                  map: map,
+                  center: YourPosition,
+                  radius: 10
+                }); */
+
+               if (positions.length - 1 > 0) {
+                    var originA = positions[positions.length - 2];
+               } else {
+                    var originA = YourPosition;
+               }
+
+               /* place(目的地:YourPosition,出発地:originA) -> 距離取得 */
+               place(YourPosition, originA);
+               function place(YourPosition, originA) {
+
+                    /* 距離取得 */
+                    var service = new google.maps.DistanceMatrixService();
+                    service.getDistanceMatrix({
+                         origins: [originA],
+                         destinations: [YourPosition],
+                         travelMode: 'WALKING',
+                         unitSystem: google.maps.UnitSystem.METRIC,
+                         avoidHighways: true,
+                         avoidTolls: true,
+                    }, callback);
+
+                    function callback(response, status) {
+                         //距離
+                         distance = response['rows'][0]['elements'][0]['distance']['value'];
+                         calc_cal(distance);
+
+                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + distance + 'm';
+
+                         sumdist += distance;
+                        var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
+                         socket.emit('info',info);
+
+                    }
+               }
+          }
+
+          function error_func(errorinfo) {
+               /* errorinfoはエラー情報を保持しています */
+               var errorcode = errorinfo.code;
+               var errmessage = errorinfo.message;
+               switch (errorcode) {
+                    case errorinfo.PERMISSION_DENIED: // 1:PERMISSION_DENIED:
+                         alert('このページにはアクセス許可がないため、位置情報の取得に失敗しました。\nエラーメッセージ：' + errmessage);
+                         break;
+                    case errorinfo.POSITION_UNAVAILABLE: // 2:POSITION_UNAVAILABLE:
+                         alert('少なくともひとつの位置情報ソースが内部的なエラーを返したため、位置情報の取得に失敗しました。\nエラーメッセージ：' + errmessage);
+                         break;
+                    case errorinfo.TIMEOUT: // 3:TIMEOUT:
+                         alert('指定された制限時間内に位置情報を取得することができませんでした。\nエラーメッセージ：' + errmessage);
+                         break;
+               }
+          }
+
+
+          function Calc() {
+               this.calory = 0;
+               this.body = 58; /* 体重 (km) */
+               this.v = 0;
+               this.time = 10;
+               this.calorycalc = function () {
+                    this.calory = mets(this.v) * this.body * 1.05 /1000; 
+               };
+               this.vcalc = function (d) {
+                    time = 10;
+                    this.v = d / time;
+               };
+          }
+
+
+          function calc_cal(dist){
+               var c = new Calc();
+               c.v = (dist/second) * 3600/1000;
+               c.vcalc(dist);
+               c.calorycalc();
+
+               sum_calory += c.calory;
+
+               document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(sum_calory)*10/10 + 'kcal';
+          }
+       
+          function call_cal(dist){
+          var c = new Calc();
+               c.v = (dist/second) * 3600/1000;
+               c.vcalc(dist);
+               c.calorycalc();
+          
+              return c.calory;
+        }
+
+          function mets(v) {
+               if(v < 3.0){
+                 return 0.0;
+               } 
+               if (v < 8.9) {
+                    return 3.5;
+               }
+               if (v < 15.100) {
+                    return 5.8;
+               }
+               if (v < 16.100) {
+                    return 6.3;
+               }
+               if (v < 19.200) {
+                    return 6.8;
+               }
+               if (v < 22.400) {
+                    return 8.0;
+               }
+               return 10.0;
+          }
+       
+     </script>
+</head>
+
+<body>
+    <style>
+    #map-widget {
+      background-color: #fff;
+      border-radius: 2px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+      font-size: 12px;
+      margin: 10px 10px 15px 10px;
+      padding: 9px 4px 9px 11px;
+      width: 22.5%;
+      text-align: left;
+     }
+    #map-widget2 {
+      background-color: #fff;
+      border-radius: 2px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+      font-size: 12px;
+      margin: 10px 10px 15px 10px;
+      padding: 9px 4px 9px 11px;
+      width: 22.5%;
+      text-align: left;
+     }
+      
+      .btn-primary {
+        display: inline-block;
+        padding: 0.3em 1em;
+        text-decoration: none;
+        color: #67c5ff;
+        border: solid 2px #67c5ff;
+        border-radius: 3px;
+        transition: .4s;
+      }
+
+      .btn-primary:hover {
+        background: #67c5ff;
+        color: white;
+      }
+     </style>
+     <div id="container" style="width: 90%;margin: 0 auto;text-align: center;">
+     <img src="https://www.u.tsukuba.ac.jp/~s1913566/media/ficle.png" style="max-width: 30%;text-align: center;">
+     <div style="height:420px;width: 90%;margin:0 auto;" id="map_canvas"></div>
+     <div id="map-widget">
+      <strong style="font-size:14px">距離 : </strong><br>
+     </div>
+     <div id="map-widget2">
+      <strong style="font-size:14px">消費カロリー : </strong><br>
+     </div>
+     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDq9Cjb-9mTgMGfSUzliGr6_j5k2kBkac&callback=initMap"
+          async="" defer=""></script>
+     <br />
+
+     <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
+     <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
+     <button class='btn btn-primary' type='button' onclick='getDateChart("2020/1/10");'>今日走った位置の描画</button>
+     <button class='btn btn-primary' type='button' onclick='getWeekChart();'>自分の走った距離と経路</button>
+     
+
+     <div id="dist"></div>
+     <div id="speed"></div>
+     <div id="calory"></div>
+     <div id="chartW"></div>
+      </div>
+
+     <!-- <input type="checkbox" id="chxHighAccuracy" /><label for='chxHighAccuracy'> 高精度に位置を取得する </label> -->
+
+     <script type="text/javascript">
+          var intervalID;
+          var second = 10;
+          var query = '';
+
+          function setTimer() {
+               var k = 1000;
+               intervalID = setInterval(getCurrentPosition, second * k);
+          }
+
+          function stopTimer() {
+               var k = 1000;
+               clearInterval(intervalID);
+          }
+       
+          function getTodayData(){
+            var date = new Date();
+            query = date.getFullYear() + '/' + (date.getMonth()+1) + '/' +date.getDate();
+            console.log('↓' + query);
+            var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_TODAY',query);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+                socket.on('SQL_TODAY_DIST', function(data, fn) {
+                today_dists = data.split(',');
+                console.log(today_dists);
+              });
+                socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                today_dists = data;
+                console.log(today_dists);
+              });
+            
+              var today_positions = [];
+            
+              for(var i=0;i<today_lats.length;i++){
+                today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
+                today_positions.push(today_position);
+              }
+            for (var i=0;i<today_positions.length;i++){
+              console.log(today_positions[i].lat());
+              console.log(today_positions[i].lng());
+            }
+            
+
+            
+            lines3 = new google.maps.Polyline({
+                    path: today_positions,
+                    strokeColor: "FF0000",
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+               lines3.setMap(map);
+          }
+          
+        function getDateData(date){
+            console.log('↓' + date);
+            var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_TODAY',date);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+                socket.on('SQL_TODAY_DIST', function(data, fn) {
+                today_dists = data.split(',');
+                console.log(today_dists);
+              });
+                socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                today_distance = data;
+                console.log(today_distance);
+              });
+            
+              var today_positions = [];
+            
+              for(var i=0;i<today_lats.length;i++){
+                today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
+                today_positions.push(today_position);
+              }
+            for (var i=0;i<today_positions.length;i++){
+              console.log(today_positions[i].lat());
+              console.log(today_positions[i].lng());
+            }
+            
+          }
+       
+              
+          function getUserData(){
+            var date = new Date();
+            console.log('UserDataのやり取り');
+            var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_USER','uid');
+            
+                socket.on('SQL_USER_LAT', function(data, fn) {
+                user_lats = data.split(',');
+                console.log(user_lats);
+              });
+                socket.on('SQL_USER_LNG', function(data, fn) {
+                user_lngs = data.split(',');
+                console.log(user_lngs);
+              });
+                socket.on('SQL_USER_DIST', function(data, fn) {
+                user_distance = data;
+                console.log(user_distance);
+              });
+            
+              var user_positions = [];
+            
+              for(var i=0;i<user_lats.length;i++){
+                var user_position = new google.maps.LatLng(user_lats[i],user_lngs[i]);
+                user_positions.push(user_position);
+              }
+            for (var i=0;i<user_positions.length;i++){
+              console.log(user_positions[i].lat());
+              console.log(user_positions[i].lng());
+            }
+            
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            
+            lines3 = new google.maps.Polyline({
+                    path: user_positions,
+                    strokeColor: "FF0000",
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+            lines3.setMap(map);
+          }
+       
+
+       
+       function getChart(){
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+         
+            function drawChart() {
+            var arr = [];
+            arr.push(['2020/1/7',100]);
+            arr.push(['Date', 'kcal']);
+            arr.reverse();
+            console.log(arr);
+            var data = google.visualization.arrayToDataTable(arr);
+            var options = {
+              title: 'kcal / days',
+              hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+              vAxis: {minValue: 0}
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+            chart.draw(data, options);
+          }
+         
+       }
+       
+       function getTodayChart(){
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawTodayChart);
+         
+            function drawTodayChart() {
+              var dt = new Date();
+              var arr = [];
+              var dtstr  = dt.toLocaleDateString();
+              console.log('↓' + dtstr);
+              var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_TODAY',dtstr);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+                socket.on('SQL_TODAY_DIST', function(data, fn) {
+                today_dists = data.split(',');
+                console.log(today_dists);
+              });
+                  socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                  console.log(data);
+                  if(data != null){
+                    today_distance = Number(data);
+                  }
+              }); 
+              console.log(today_lngs);
+              console.log(today_dists);
+              console.log(Number(today_dists[0]));
+              arr.push([dtstr,today_distance]);
+              arr.push(['Date', 'kcal']);
+              arr.reverse();
+              console.log(arr);
+              var data = google.visualization.arrayToDataTable(arr);
+              var options = {
+                title: 'kcal / days',
+                hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0}
+              };
+              var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+              chart.draw(data, options);
+              }
+       }
+       
+         function getDateChart(date){
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawDateChart);
+         
+            function drawDateChart() {
+              var arr = [];
+              console.log('↓' + date);
+              var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_TODAY',date);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+                socket.on('SQL_TODAY_DIST', function(data, fn) {
+                today_dists = data.split(',');
+                console.log(today_dists);
+              });
+                  socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                  console.log(data);
+                  if(data != null){
+                    today_distance = Number(data);
+                  }
+              }); 
+ 
+              arr.push([date,today_distance]);
+              arr.push(['Date', 'kcal']);
+              arr.reverse();
+              console.log(arr);
+              var data = google.visualization.arrayToDataTable(arr);
+              var options = {
+                title: 'kcal / days',
+                hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0}
+              };
+              var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+              chart.draw(data, options);
+              }
+       }
+       
+       function getDateData(date){
+         var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_TODAY',date);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+                socket.on('SQL_TODAY_DIST', function(data, fn) {
+                today_dists = data.split(',');
+                console.log(today_dists);
+              });
+                  socket.on('SQL_TODAY_SUM_DIST', function(data, fn) {
+                  console.log(data);
+                  if(data != null){
+                    today_distance = Number(data);
+                  }
+                  else{
+                      var rand = function(n){
+                      return Math.floor(Math.random() * n) + 1;
+                    };
+                    today_ditance = rand(100) + 1;
+                  }
+              }); 
+       }
+       
+       function getWeekChart(){
+              google.charts.load('current', {'packages':['corechart']});
+              google.charts.setOnLoadCallback(drawWeekChart);
+         
+              function drawWeekChart(){
+              var dt = new Date();
+              var arr = [];
+              var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_WEEK','week');
+         
+                socket.on('SQL_WEEK_DIST', function(data, fn) {
+                week_dists = data.split(',').slice();
+              });
+              console.log(week_dists);
+              for(var i=0;i<7;i++){
+                sum_calory = 0.0;
+                var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
+                
+                calc_cal(week_dists[i]);
+                arr.push([dtstr,sum_calory,Number(week_dists[i])]);
+                dt.setDate(dt.getDate() - 1);
+              }
+
+              arr.push(['Date', 'kcal','dist']);
+              arr.reverse();
+              console.log(arr);
+              var data = google.visualization.arrayToDataTable(arr);
+              var options = {
+                title: '消費カロリー',              
+                series: {
+                0: {targetAxisIndex:0}, // 第1系列は左のY軸を使用
+                1: {targetAxisIndex:1}, // 第2系列は右のY時を使用
+                },
+                hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
+                vAxis: {
+                0:{title: 'kcal',minValue: 0},
+                1:{title: 'm',minValue: 1}
+                }
+              };
+              var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
+              chart.draw(data, options);
+              }
+       }
+       
+
+     </script>
+
+</body>
+
+</html>
