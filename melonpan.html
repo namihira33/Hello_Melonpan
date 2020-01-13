@@ -3,6 +3,7 @@
 
 <head>
      <meta charset="utf-8" />
+     <link rel='stylesheet' type='text/css' href='style.css' />
      <script src="/socket.io/socket.io.js"></script>
      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script type="text/javascript">
@@ -18,7 +19,7 @@
           var today_distance = 15;
           var today_datas = [];
           var week_dists = [];
-          
+
           var user_lats = [];
           var user_lngs = [];
           var user_distance = 0;
@@ -70,7 +71,7 @@
                /* LatLng型の場合、LatLng.lat() や LatLng.lng()でそれぞれの数値を取ってこれる */
                var YourPosition = new google.maps.LatLng(lat, lng);
                var now = new Date(position.timestamp); // 取得時間
-               now_str = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate(); 
+               now_str = now.getFullYear() + '/' + (now.getMonth() + 1) + '/' + now.getDate();
                  /*+ '/' +now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() */
 
                /* 前位置にあったマーカーを消去 */
@@ -96,11 +97,11 @@
                     content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +
                          '<br />取得時間：' + now_str + '<br />' + sumdist + 'm'
                };
-            
+
               /* 送信用の情報を作成 -> 送信 */
               var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + sumdist
 
-               /* デバッグ用のinfowindowの作り方 
+               /* デバッグ用のinfowindowの作り方
                var infoWindow = new google.maps.InfoWindow(win_options);
                infoWindow.open(map, marker); */
 
@@ -190,7 +191,7 @@
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
-                    this.calory = mets(this.v) * this.weight * 1.05 * (1/360); 
+               this.calory = mets(this.v) * this.weight * 1.05 * (1/360); 
                };
                this.vcalc = function (d) {
                     time = 10;
@@ -209,20 +210,20 @@
 
                document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(sum_calory)*10/10 + 'kcal';
           }
-       
+
           function call_cal(dist){
           var c = new Calc();
                c.v = (dist/second) * 3600/1000;
                c.vcalc(dist);
                c.calorycalc();
-          
+
               return c.calory;
         }
 
           function mets(v) {
                if(v < 3.0){
                  return 0.0;
-               } 
+               }
                if (v < 8.9) {
                     return 3.5;
                }
@@ -240,51 +241,14 @@
                }
                return 10.0;
           }
-       
+
      </script>
 </head>
 
 <body>
-    <style>
-    #map-widget {
-      background-color: #fff;
-      border-radius: 2px;
-      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-      font-size: 12px;
-      margin: 10px 10px 15px 10px;
-      padding: 9px 4px 9px 11px;
-      width: 22.5%;
-      text-align: left;
-     }
-    #map-widget2 {
-      background-color: #fff;
-      border-radius: 2px;
-      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-      font-size: 12px;
-      margin: 10px 10px 15px 10px;
-      padding: 9px 4px 9px 11px;
-      width: 22.5%;
-      text-align: left;
-     }
-      
-      .btn-primary {
-        display: inline-block;
-        padding: 0.3em 1em;
-        text-decoration: none;
-        color: #67c5ff;
-        border: solid 2px #67c5ff;
-        border-radius: 3px;
-        transition: .4s;
-      }
-
-      .btn-primary:hover {
-        background: #67c5ff;
-        color: white;
-      }
-     </style>
      <div id="container" style="width: 90%;margin: 0 auto;text-align: center;">
      <img src="https://www.u.tsukuba.ac.jp/~s1913566/media/ficle.png" style="max-width: 30%;text-align: center;">
-     <div style="height:420px;width: 90%;margin:0 auto;" id="map_canvas"></div>
+     <div id="map_canvas"></div>
      <div id="map-widget">
       <strong style="font-size:14px">距離 : </strong><br>
      </div>
@@ -299,7 +263,7 @@
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
      <button class='btn btn-primary' type='button' onclick='getDateChart("2020/1/10");'>今日走った位置の描画</button>
      <button class='btn btn-primary' type='button' onclick='getWeekChart();'>自分の走った距離と経路</button>
-     
+
 
      <div id="dist"></div>
      <div id="speed"></div>
@@ -323,7 +287,7 @@
                var k = 1000;
                clearInterval(intervalID);
           }
-       
+
           function getTodayData(){
             var date = new Date();
             query = date.getFullYear() + '/' + (date.getMonth()+1) + '/' +date.getDate();
@@ -333,7 +297,7 @@
                 console.log(data.message);
               });
                 socket.emit('SQL_TODAY',query);
-            
+
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
                 today_lats = data.split(',');
                 console.log(today_lats);
@@ -350,9 +314,9 @@
                 today_dists = data;
                 console.log(today_dists);
               });
-            
+
               var today_positions = [];
-            
+
               for(var i=0;i<today_lats.length;i++){
                 today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
                 today_positions.push(today_position);
@@ -361,9 +325,9 @@
               console.log(today_positions[i].lat());
               console.log(today_positions[i].lng());
             }
-            
 
-            
+
+
             lines3 = new google.maps.Polyline({
                     path: today_positions,
                     strokeColor: "FF0000",
@@ -373,7 +337,7 @@
 
                lines3.setMap(map);
           }
-          
+
         function getDateData(date){
             console.log('↓' + date);
             var socket = io.connect();
@@ -381,7 +345,7 @@
                 console.log(data.message);
               });
                 socket.emit('SQL_TODAY',date);
-            
+
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
                 today_lats = data.split(',');
                 console.log(today_lats);
@@ -398,9 +362,9 @@
                 today_distance = data;
                 console.log(today_distance);
               });
-            
+
               var today_positions = [];
-            
+
               for(var i=0;i<today_lats.length;i++){
                 today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
                 today_positions.push(today_position);
@@ -409,10 +373,10 @@
               console.log(today_positions[i].lat());
               console.log(today_positions[i].lng());
             }
-            
+
           }
-       
-              
+
+
           function getUserData(){
             var date = new Date();
             console.log('UserDataのやり取り');
@@ -421,7 +385,7 @@
                 console.log(data.message);
               });
                 socket.emit('SQL_USER','uid');
-            
+
                 socket.on('SQL_USER_LAT', function(data, fn) {
                 user_lats = data.split(',');
                 console.log(user_lats);
@@ -434,9 +398,9 @@
                 user_distance = data;
                 console.log(user_distance);
               });
-            
+
               var user_positions = [];
-            
+
               for(var i=0;i<user_lats.length;i++){
                 var user_position = new google.maps.LatLng(user_lats[i],user_lngs[i]);
                 user_positions.push(user_position);
@@ -445,11 +409,11 @@
               console.log(user_positions[i].lat());
               console.log(user_positions[i].lng());
             }
-            
+
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawChart);
 
-            
+
             lines3 = new google.maps.Polyline({
                     path: user_positions,
                     strokeColor: "FF0000",
@@ -459,13 +423,13 @@
 
             lines3.setMap(map);
           }
-       
 
-       
+
+
        function getChart(){
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawChart);
-         
+
             function drawChart() {
             var arr = [];
             arr.push(['2020/1/7',100]);
@@ -481,13 +445,13 @@
             var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
             chart.draw(data, options);
           }
-         
+
        }
-       
+
        function getTodayChart(){
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawTodayChart);
-         
+
             function drawTodayChart() {
               var dt = new Date();
               var arr = [];
@@ -498,7 +462,7 @@
                 console.log(data.message);
               });
                 socket.emit('SQL_TODAY',dtstr);
-            
+
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
                 today_lats = data.split(',');
                 console.log(today_lats);
@@ -516,7 +480,7 @@
                   if(data != null){
                     today_distance = Number(data);
                   }
-              }); 
+              });
               console.log(today_lngs);
               console.log(today_dists);
               console.log(Number(today_dists[0]));
@@ -534,11 +498,11 @@
               chart.draw(data, options);
               }
        }
-       
+
          function getDateChart(date){
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawDateChart);
-         
+
             function drawDateChart() {
               var arr = [];
               console.log('↓' + date);
@@ -547,7 +511,7 @@
                 console.log(data.message);
               });
                 socket.emit('SQL_TODAY',date);
-            
+
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
                 today_lats = data.split(',');
                 console.log(today_lats);
@@ -565,8 +529,8 @@
                   if(data != null){
                     today_distance = Number(data);
                   }
-              }); 
- 
+              });
+
               arr.push([date,today_distance]);
               arr.push(['Date', 'kcal']);
               arr.reverse();
@@ -581,14 +545,14 @@
               chart.draw(data, options);
               }
        }
-       
+
        function getDateData(date){
          var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
                 console.log(data.message);
               });
                 socket.emit('SQL_TODAY',date);
-            
+
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
                 today_lats = data.split(',');
                 console.log(today_lats);
@@ -612,13 +576,13 @@
                     };
                     today_ditance = rand(100) + 1;
                   }
-              }); 
+              });
        }
-       
+
        function getWeekChart(){
               google.charts.load('current', {'packages':['corechart']});
               google.charts.setOnLoadCallback(drawWeekChart);
-         
+
               function drawWeekChart(){
               var dt = new Date();
               var arr = [];
@@ -627,7 +591,7 @@
                 console.log(data.message);
               });
                 socket.emit('SQL_WEEK','week');
-         
+
                 socket.on('SQL_WEEK_DIST', function(data, fn) {
                 week_dists = data.split(',').slice();
               });
@@ -635,7 +599,7 @@
               for(var i=0;i<7;i++){
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                
+
                 calc_cal(week_dists[i]);
                 arr.push([dtstr,sum_calory,Number(week_dists[i])]);
                 dt.setDate(dt.getDate() - 1);
@@ -646,7 +610,7 @@
               console.log(arr);
               var data = google.visualization.arrayToDataTable(arr);
               var options = {
-                title: '消費カロリー',              
+                title: '消費カロリー',
                 series: {
                 0: {targetAxisIndex:0}, // 第1系列は左のY軸を使用
                 1: {targetAxisIndex:1}, // 第2系列は右のY時を使用
@@ -661,7 +625,7 @@
               chart.draw(data, options);
               }
        }
-       
+
 
      </script>
 
