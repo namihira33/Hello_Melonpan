@@ -187,11 +187,11 @@
 
           function Calc() {
                this.calory = 0;
-               this.body = 58; /* 体重 (km) */
+               this.weight = 62; /* 体重 (kg) */
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
-                    this.calory = mets(this.v) * this.body * 1.05 /1000;
+               this.calory = mets(this.v) * this.weight * 1.05 * (1/360); 
                };
                this.vcalc = function (d) {
                     time = 10;
