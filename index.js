@@ -219,9 +219,11 @@ socket.on('SQL_WEEK',function(data){
           console.log(JSON.stringify(row));
           if(row['sum'] != null){
           dists += row['sum'] + ',';
+          console.log(row['sum']);
           }
           else{
             dists += '0,';
+            console.log(dists);
           }
     }
 
