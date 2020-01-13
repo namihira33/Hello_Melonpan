@@ -633,7 +633,7 @@
               console.log(week_dists);
               for(var i=0;i<7;i++){
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                arr.push([dtstr,Number(week_dists[i])]);
+                arr.push([dtstr,Number(week_dists[i]),Number(week_dists[i])]);
                 dt.setDate(dt.getDate() - 1);
               }
 
@@ -642,9 +642,16 @@
               console.log(arr);
               var data = google.visualization.arrayToDataTable(arr);
               var options = {
-                title: 'kcal / days',
+                title: '消費カロリー',              
+                series: {
+                0: {targetAxisIndex:0}, // 第1系列は左のY軸を使用
+                1: {targetAxisIndex:1}, // 第2系列は右のY時を使用
+                },
                 hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
-                vAxis: {minValue: 0}
+                vAxis: {
+                0:{title: 'kcal',minValue: 0},
+                1:{title: 'm',minValue: 1}
+                }
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
