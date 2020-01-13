@@ -567,9 +567,7 @@
                     today_distance = Number(data);
                   }
               }); 
-              console.log(today_lngs);
-              console.log(today_dists);
-              console.log(Number(today_dists[0]));
+ 
               arr.push([date,today_distance]);
               arr.push(['Date', 'kcal']);
               arr.reverse();
@@ -619,6 +617,8 @@
        }
        
        function getWeekChart(){
+              google.charts.load('current', {'packages':['corechart']});
+              google.charts.setOnLoadCallback(drawDateChart);
               var dt = new Date();
               var arr = [];
               var socket = io.connect();
