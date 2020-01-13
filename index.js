@@ -220,10 +220,10 @@ socket.on('SQL_WEEK',function(data){
           if(row['sum'] != null){
           dists += row['sum'] + ',';
           console.log(row['sum']);
+          console.log(dists);
           }
           else{
             dists += '0,';
-            console.log(dists);
           }
     }
 
