@@ -628,7 +628,7 @@
                 socket.emit('SQL_WEEK','week');
          
                 socket.on('SQL_WEEK_DIST', function(data, fn) {
-                week_dists = data.split(',').slice(0,-1);
+                week_dists = data.split(',').slice();
               });
               console.log(week_dists);
               for(var i=0;i<7;i++){
