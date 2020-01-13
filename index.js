@@ -74,6 +74,18 @@ function doRequest(req, res) {
             cookie.serialize("user_id", user_id,{ 
                 expires:imaging_the_future })]
           );
+            /* データベースに格納 */
+            q_str = '';
+            q_str += "INSERT INTO users VALUES('";
+            q_str += user_id;
+            q_str += "','";
+            q_str += user_id + '1';
+            q_str += "');";
+            client.query(q_str,(err, res) => {
+                if (err) throw err;
+                  for (let row of res.rows) {
+                      console.log(JSON.stringify(row));
+                  }});
           res.writeHead(200, {'Content-Type': 'text/html'});
           res.write(data);
           console.log("ユーザ情報なし");
