@@ -1,93 +1,279 @@
-
 const http = require('http');
-//const hostname = '127.0.0.1';
-const port = process.env.PORT || 8000;
-
+const querystring = require('querystring');
+const cookie = require('cookie');
+const uuid = require('node-uuid');
 const { Client } = require('pg');
+const port = process.env.PORT || 8000;
+const imaging_the_future = new Date(2045,3,11);
+var fs = require('fs');
+var server = http.createServer();
+var temp;
+var datas;
+var user_id = 1000;
+var q_str = "";
+var flag = false;
+
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
-});
+}); 
 
 /* SQL接続 -> 以降は、client.query(~)で呼び出せるように */
-client.connect();
+ client.connect(); 
 
-client.query('SELECT * FROM users', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
-  client.end();
-});
-
-var server = http.createServer();
 server.on('request', doRequest);
-// ファイルモジュールを読み込む
-var fs = require('fs');
+
 // リクエストの処理
 function doRequest(req, res) {
+    // ファイルを読み込んだら、コールバック関数を実行する。
     fs.readFile('./melonpan10.html', 'utf-8' , doReard );
 
     // コンテンツを表示する。
     function doReard(err, data) {
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
+      /* クッキーが登録されていたら、そのまま表示*/
+        if(req.headers.cookie !== undefined) {
+				  // 設定されているCookieをブラウザに表示する
+          var cookies = cookie.parse(req.headers.cookie);
+          if(cookies["user_id"] !== undefined){
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            user_id = cookies["user_id"];
+            console.log("ユーザ情報あり");
+            console.log("user_id : " + user_id);
+          }
+          else{
+            /* クッキーが登録されていなかったら、クッキーに登録 + データベースに格納 */
+            /* ID生成 -> クッキー登録 */
+            user_id = uuid.v1();
+            res.setHeader("Set-Cookie", [
+              cookie.serialize("user_id", user_id,{ 
+                expires:imaging_the_future }),]
+            );
+            /* データベースに格納 */
+            q_str = '';
+            q_str += "INSERT INTO users VALUES('";
+            q_str += user_id;
+            q_str += "','";
+            q_str += user_id + '1';
+            q_str += "');";
+            client.query(q_str,(err, res) => {
+                if (err) throw err;
+                  for (let row of res.rows) {
+                      console.log(JSON.stringify(row));
+                  }});
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.write(data);
+            console.log("ユーザ情報なし");
+            console.log("user_id : " + user_id);            
+          }
+        }
+        else {
+          user_id = uuid.v1();
+          res.setHeader("Set-Cookie", [
+            cookie.serialize("user_id", user_id,{ 
+                expires:imaging_the_future })]
+          );
+            /* データベースに格納 */
+            q_str = '';
+            q_str += "INSERT INTO users VALUES('";
+            q_str += user_id;
+            q_str += "','";
+            q_str += user_id + '1';
+            q_str += "');";
+            client.query(q_str,(err, res) => {
+                if (err) throw err;
+                  for (let row of res.rows) {
+                      console.log(JSON.stringify(row));
+                  }});
+          res.writeHead(200, {'Content-Type': 'text/html'});
+          res.write(data);
+          console.log("ユーザ情報なし");
+          console.log("user_id : " + user_id);
+  			}
         res.end();
     }
 }
+var io = require('socket.io').listen(server);
+console.log(`Server running at ${port}/`);
 server.listen(port);
 
-/*
-
-function Calc(){
-  this.calory = 0;
-  this.body = 58;
-  this.v = 0;
-  this.calorycalc = function(){
-    time = 0.5;
-    this.calory = mets(this.v) * this.body * time * 1.05;
-  };
-  this.vcalc = function(d){
-    time = 0.5;
-    this.v = d/time;
-  };
+io.sockets.on('connection', function(socket) {
+  /* 接続したら、'greeting'メッセージをやり取りする */
+  socket.emit('greeting', {message: 'Connected'}, function (data) {
+    console.log('result: ' + data);
+  });
+  
+  /* HTML側から'info'メッセージが送られてくるのを待つ */
+  socket.on('info',function(data){
+    q_str = '';
+    flag = false;
+    datas = data.split(',');
+    q_str += "INSERT INTO places VALUES('";
+    q_str += user_id;
+    q_str += "','";
+    q_str += datas[0];
+    q_str += "','";
+    q_str  += datas[1];
+    q_str += "','";
+    q_str  += datas[2];
+    q_str += "','";
+    q_str  += datas[3];
+    q_str += "');";
+    console.log(q_str + '\n');
+    /* SQLへのqueryの送り方 : errはエラーメッセージ resはクエリー格納後の答え */
+    client.query(q_str,(err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+  }});
+    client.query('SELECT * FROM places', (err, res) => {
+      if (err) throw err;
+      for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+//  client.end();
 }
+    });
 
 
-var newData = []
-var item = []
+});
+  
+socket.on('SQL_TODAY',function(data){
+  console.log(data);
+  var lats = '';
+  var lngs = '';
+  var dists = '';
+  var distance = 0;
+  var query_str = "";
+  query_str += "SELECT lat,lng,distance FROM places WHERE date=" + "'" + data + "';";
+  console.log(query_str);
+  client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of res.rows){
+      console.log(JSON.stringify(row));
+      lats += row['lat'] + ',';
+      lngs += row['lng'] + ',';
+      dists += row['distance'] + ',';
+    }
+    var send_msg_lat = lats.slice(0,-1);
+    var send_msg_lng = lngs.slice(0,-1);
+    var send_msg_dist = dists.slice(0,-1);
 
-// 計算機構
-function calc_all(){
-  const fs = require('fs');
-  const csvSync = require('csv-parse/lib/sync'); // requiring sync module
-  let text = fs.readFileSync("test.csv", 'utf-8');
-  newData = csvSync(text);
+    socket.emit('SQL_TODAY_LAT',send_msg_lat);
+    socket.emit('SQL_TODAY_LNG',send_msg_lng);
+    socket.emit('SQL_TODAY_DIST',send_msg_dist);    
+  });
+  
+    query_str = "SELECT SUM(distance) FROM places WHERE date=" + "'" + data + "';";
+    client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of res.rows){
+      console.log(JSON.stringify(row));
+      distance = row['sum'];
+    }
 
-  console.log('newDataはありますか？');
-  console.log(newData);
-  for(var i = 0; i < newData.length-1;i++){
-    var r = 6378.137 * 1000;
-    var x1 = newData[i][0];
-    var x2 = newData[i+1][0];
-    var y1 = newData[i][1];
-    var y2 = newData[i+1][1];
-    var d = r * Math.acos(Math.sin(y1)*Math.sin(y2)+Math.cos(y1)*Math.cos(y2)*Math.cos(x2-x1));
-    var time = 0.5;
-    var c = new Calc();
-    c.vcalc(d);
-    c.calorycalc();
-    console.log(c.v);
-    console.log(c.calory);
+    socket.emit('SQL_TODAY_SUM_DIST',distance);
+  
+    });
+});
+  
+socket.on('SQL_USER',function(data){
+  console.log(data);
+  var lats = '';
+  var lngs = '';
+  var dists = '';
+  var query_str = "";
+  query_str += "SELECT lat,lng FROM places WHERE uid=" + "'" + user_id + "';";
+  console.log(query_str);
+  client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of res.rows){
+      console.log(JSON.stringify(row));
+      lats += row['lat'] + ',';
+      lngs += row['lng'] + ',';
+    }
+    var send_msg_lat = lats.slice(0,-1);
+    var send_msg_lng = lngs.slice(0,-1);
+
+    socket.emit('SQL_USER_LAT',send_msg_lat);
+    socket.emit('SQL_USER_LNG',send_msg_lng);
+    
+  });
+  
+    query_str = "SELECT SUM(distance) FROM places WHERE uid=" + "'" + user_id + "';";
+    client.query(query_str,(err,res) => {
+    if(err) throw err;
+    for(let row of res.rows){
+      console.log(JSON.stringify(row));
+      dists += row['sum'];
+    }
+
+    socket.emit('SQL_USER_DIST',dists);
+    
+  });
+  
+});
+  
+socket.on('SQL_WEEK',function(data){
+  console.log(data);
+  var dt = new Date();
+  var query_str = "";
+  var dists = '';
+  var j = 0;
+  
+  for(var i=0;i<7;i++){
+      query_str = "";
+      var dtstr  = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
+      console.log(dtstr);
+      query_str += "SELECT sum(distance) FROM places WHERE date=" + "'" + dtstr + "';";
+      client.query(query_str,(err,res) => {
+        j += 1;
+        if(err) throw err;
+        for(let row of res.rows){
+          console.log(JSON.stringify(row));
+          if(row['sum'] != null){
+          dists += row['sum'] + ',';
+          console.log(dists);
+          }
+          else{
+            dists += '0,';
+          }
+          if(j > 6){
+            var send_msg_dist = dists.slice(0,-1);
+            socket.emit('SQL_WEEK_DIST',send_msg_dist);
+          }
+    }
+
+  });
+    dt.setDate(dt.getDate() - 1);
   }
-}
-function mets(v){
-  if (v < 8900/60){return 3.5;}
-  if (v < 15100/60){return 5.8;}
-  if (v < 16100/60){return 6.3;}
-  if (v < 19200/60){return 6.8;}
-  if (v < 22400/60){return 8.0;}
-  return 10.0;
-}
+  
+});
+
+/*
+io.sockets.on('disconnection',function(){
+  console.log('disconnection');
+});*/
+
+/*
+client.query('SELECT * FROM users', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  } */
+//  client.end();
+});
+
+
+/*
+client.query("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');");
+
+console.log("INSERT INTO places VALUES('" + 'abc' + "','" + datas[0] + "','" + datas[1] + "','" + datas[2] + "','" + '1000' + "');")
 */
+
+
+
+
+
+
+/* ------------------------------------- */
