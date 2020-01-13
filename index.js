@@ -226,9 +226,10 @@ socket.on('SQL_WEEK',function(data){
     }
 
   });
-    
+      console.log(dists);
       dt.setDate(dt.getDate() - 1);
   }
+  console.log(dists);
   var send_msg_dist = dists.slice(0,-1);
   console.log(send_msg_dist);
   socket.emit('SQL_WEEK_DIST',send_msg_dist); 
