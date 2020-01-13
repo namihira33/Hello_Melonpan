@@ -619,6 +619,8 @@
        function getWeekChart(){
               google.charts.load('current', {'packages':['corechart']});
               google.charts.setOnLoadCallback(drawDateChart);
+         
+              function drawWeekChart(){
               var dt = new Date();
               var arr = [];
               var socket = io.connect();
@@ -655,6 +657,7 @@
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
+              }
        }
        
 
