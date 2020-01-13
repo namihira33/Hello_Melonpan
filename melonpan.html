@@ -89,7 +89,10 @@
                     position: YourPosition,
                     map: map,
                     title: "You are here.",
-                    icon: 'https://www.u.tsukuba.ac.jp/~s1913566/media/cycle.png'
+                    icon: {
+                      url : 'https://www.u.tsukuba.ac.jp/~s1913566/media/cycle.png',
+                      size: new google.maps.Size(19,25)
+                    }
                });
                map.setCenter(YourPosition);
                var win_options = {
@@ -190,7 +193,7 @@
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
-                    this.calory = mets(this.v) * this.weight * 1.05 * (1/360); 
+                    this.calory = mets(this.v) * this.weight * 1.05 * (1/360);  
                };
                this.vcalc = function (d) {
                     time = 10;
