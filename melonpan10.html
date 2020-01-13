@@ -631,6 +631,11 @@
                 week_dists = data.split(',').slice(0,-1);
               });
               console.log(week_dists);
+              for(var i=0;i<7;i++){
+                var dtstr = dt.toDateString();
+                arr.push([dtstr,Number(week_dists[i])]);
+                dt.setDate(dt.getDate() - 1);
+              }
 
               arr.push(['Date', 'kcal']);
               arr.reverse();
