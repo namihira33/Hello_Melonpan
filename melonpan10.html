@@ -221,7 +221,7 @@
         }
 
           function mets(v) {
-               if(v < 1.0){
+               if(v < 3.0){
                  return 0.0;
                } 
                if (v < 8.9) {
@@ -634,8 +634,11 @@
               });
               console.log(week_dists);
               for(var i=0;i<7;i++){
+                sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                arr.push([dtstr,Number(week_dists[i]),Number(week_dists[i])]);
+                
+                calc_cal(week_dists[i]);
+                arr.push([dtstr,sum_calory,Number(week_dists[i])]);
                 dt.setDate(dt.getDate() - 1);
               }
 
