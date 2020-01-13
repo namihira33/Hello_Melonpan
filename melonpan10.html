@@ -632,7 +632,7 @@
               });
               console.log(week_dists);
               for(var i=0;i<7;i++){
-                var dtstr = dt.toDateString();
+                var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
                 arr.push([dtstr,Number(week_dists[i])]);
                 dt.setDate(dt.getDate() - 1);
               }
