@@ -219,22 +219,21 @@ socket.on('SQL_WEEK',function(data){
           console.log(JSON.stringify(row));
           if(row['sum'] != null){
           dists += row['sum'] + ',';
-          console.log(row['sum']);
           console.log(dists);
           }
           else{
             dists += '0,';
           }
+          if(i==6){
+            var send_msg_dist = dists.slice(0,-1);
+            console.log(send_msg_dist);            
+            socket.emit('SQL_WEEK_DIST',send_msg_dist); 
+          }
     }
 
   });
-      console.log(dists);
-      dt.setDate(dt.getDate() - 1);
+    dt.setDate(dt.getDate() - 1);
   }
-  console.log(dists);
-  var send_msg_dist = dists.slice(0,-1);
-  console.log(send_msg_dist);
-  socket.emit('SQL_WEEK_DIST',send_msg_dist); 
   
 });
 
