@@ -244,46 +244,76 @@
           }
        
      </script>
+
+<style>
+#container {
+  text-align: center;
+}
+
+div#map_canvas {
+  height:60%;
+  width: 90%;
+  margin:0 auto;
+}
+
+button.btn-primary{
+  width: 70%;
+  font-size: 32px;
+  background-color: #FFFFFF;
+  color: #67c5ff;
+  display: block;
+  text-align: center;
+  padding: 0.3em 1em;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:0.5em;
+  margin-bottom:0.5em;
+  text-decoration: none;
+  border: solid 2px #67c5ff;
+  border-radius: 3px;
+  transition: .4s;
+}
+
+#map-widget {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+  font-size: 12px;
+  margin: 10px 10px 15px 10px;
+  padding: 9px 4px 9px 11px;
+  width: 22.5%;
+  text-align: left;
+ }
+#map-widget2 {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+  font-size: 12px;
+  margin: 10px 10px 15px 10px;
+  padding: 9px 4px 9px 11px;
+  width: 22.5%;
+  text-align: left;
+ }
+
+.btn-primary {
+    display: inline-block;
+    padding: 0.3em 1em;
+    text-decoration: none;
+    color: #67c5ff;
+    border: solid 2px #67c5ff;
+    border-radius: 3px;
+    transition: .4s;
+}
+
+.btn-primary:hover {
+    background: #67c5ff;
+    color: white;
+}
+
+   </style>
 </head>
 
 <body>
-    <style>
-    #map-widget {
-      background-color: #fff;
-      border-radius: 2px;
-      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-      font-size: 12px;
-      margin: 10px 10px 15px 10px;
-      padding: 9px 4px 9px 11px;
-      width: 22.5%;
-      text-align: left;
-     }
-    #map-widget2 {
-      background-color: #fff;
-      border-radius: 2px;
-      box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
-      font-size: 12px;
-      margin: 10px 10px 15px 10px;
-      padding: 9px 4px 9px 11px;
-      width: 22.5%;
-      text-align: left;
-     }
-      
-      .btn-primary {
-        display: inline-block;
-        padding: 0.3em 1em;
-        text-decoration: none;
-        color: #67c5ff;
-        border: solid 2px #67c5ff;
-        border-radius: 3px;
-        transition: .4s;
-      }
-
-      .btn-primary:hover {
-        background: #67c5ff;
-        color: white;
-      }
-     </style>
      <div id="container" style="width: 90%;margin: 0 auto;text-align: center;">
      <img src="https://www.u.tsukuba.ac.jp/~s1913566/media/ficle.png" style="max-width: 30%;text-align: center;">
      <div style="height:420px;width: 90%;margin:0 auto;" id="map_canvas"></div>
