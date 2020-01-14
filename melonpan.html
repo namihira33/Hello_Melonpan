@@ -4,6 +4,7 @@
 
 <head>
      <meta charset="utf-8" />
+     <link rel='stylesheet' type='text/css' href='style.css' />
      <script src="/socket.io/socket.io.js"></script>
      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script type="text/javascript">
@@ -90,8 +91,7 @@
                     position: YourPosition,
                     map: map,
                     title: "You are here.",
-                    icon: 'https://www.u.tsukuba.ac.jp/~s1913566/media/cycle.png',
-                    size: new google.maps.Size(190,250)
+                    icon: 'https://www.u.tsukuba.ac.jp/~s1913566/media/cycle.png'
                });
                map.setCenter(YourPosition);
                var win_options = {
