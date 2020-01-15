@@ -873,9 +873,15 @@ button.btn-primary{
               for(var i=0;i<7;i++){
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                
-                calc_cal(week_dists[i]);
-                arr.push([dtstr,sum_calory,Number(week_dists[i])/1000.0]);
+                getDateline(date);
+//                calc_cal(week_dists[i]);
+                var s_calory = 0.0;
+         
+                for(var i=0;i<week_dists.length;i++){
+                  var v = (week_dists[i]/second) * 3600/1000;
+                  s_calory = mets(v) * 58 * 1.05 /1000 ;
+              }
+                arr.push([dtstr,s_calory,Number(week_dists[i])/1000.0]);
                 dt.setDate(dt.getDate() - 1);
               }
 
