@@ -866,6 +866,7 @@ button.btn-primary{
               });
 
               console.log(week_dists);
+              var line;
               for(var i=0;i<7;i++){
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
@@ -888,7 +889,7 @@ button.btn-primary{
                 today_positions.push(today_position);
               }
               
-              var line = new google.maps.Polyline({
+                line = new google.maps.Polyline({
                     path: today_positions,
                     strokeColor: '#1edddd',
                     strokeOpacity: .7,
