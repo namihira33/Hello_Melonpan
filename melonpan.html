@@ -868,14 +868,12 @@ button.btn-primary{
                 socket.on('SQL_WEEK_DIST', function(data, fn) {
                 week_dists = data.split(',').slice();
               });
-              socket.disconnect();
+
               console.log(week_dists);
               for(var i=0;i<7;i++){
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
                 console.log(dtstr);
-                getDateline(dtstr);
-//                calc_cal(week_dists[i]);
                 var s_calory = 0.0;
          
                 for(var i=0;i<week_dists.length;i++){
