@@ -115,7 +115,7 @@
                     path: positions,
                     strokeColor: "FF0000",
                     strokeOpacity: .7,
-                    strokeWeight: 7
+                    strokeWeight: 5
                });
 
                lines.setMap(map);
@@ -160,8 +160,10 @@
                          calc_cal(distance);
 
                          document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumdist + 'm';
-
-                         sumdist += distance;
+                      
+                          if(distance > 10){
+                           sumdist += distance;
+                          }
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
                          socket.emit('info',info);
 
@@ -614,24 +616,24 @@ button.btn-primary{
        
        function getColor(v){
          if(v<3.0){
-           return '#1edddd'; //テーマ色
+           return '#f0908d'; //テーマ色
          }
         if (v < 8.9) {
-            return '##f5b199'; //一献色
+            return '#f0908d'; //一献色
         }
         if (v < 15.100) {
-            return '#f0908d'; //薄紅色
+            return '#1edddd'; //薄紅色
         }
         if (v < 16.100) {
             return '#80aba9'; //水浅葱色
         }
         if (v < 19.200) {
-            return '#a6a5c4' //藤鼠色
+            return '#84a2d44'
         }
         if (v < 22.400) {
             return '#84a2d4'; //青藤色
         }
-            return '#aacf53'; //萌黄色
+            return '#f0908d'; //萌黄色
        }
        
        function getTodayChart(){
