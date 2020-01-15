@@ -151,7 +151,7 @@
                     service.getDistanceMatrix({
                          origins: [originA],
                          destinations: [YourPosition],
-                         travelMode: 'WALKING',
+                         travelMode: 'BICYCLING',
                          unitSystem: google.maps.UnitSystem.METRIC,
                          avoidHighways: true,
                          avoidTolls: true,
@@ -192,7 +192,7 @@
 
           function Calc() {
                this.calory = 0;
-               this.body = 58; /* 体重 (km) */
+               this.body = 58; /* 体重 (kg) */
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
@@ -442,11 +442,6 @@ button.btn-primary{
                else if(status==1){
                 clearInterval(intervalID);
                }
-          }
-
-          function stopTimer() {
-               var k = 1000;
-               clearInterval(intervalID);
           }
 
           function getTodayData(){
