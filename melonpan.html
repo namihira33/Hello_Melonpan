@@ -19,6 +19,7 @@
           var today_distance = 15;
           var today_datas = [];
           var week_dists = [];
+          var week_cals = [];
           
           var user_lats = [];
           var user_lngs = [];
@@ -864,14 +865,18 @@ button.btn-primary{
          
                 socket.on('SQL_WEEK_DIST', function(data, fn) {
                 week_dists = data.split(',').slice();
+                console.log(week_dists);
+                  
+                socket.on('SQL_WEEK_CAL', function(data, fn) {
+                week_cals = data.split(',').slice();
+                console.log(week_cals);
               });
 
               console.log(week_dists);
               for(var i=0;i<7;i++){
-                calory_s = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
+                arr.push([dtstr,Number(week_cals[i]),Number(week_dists[i])/1000.0]);
                 dt.setDate(dt.getDate() - 1);
-                arr.push([dtstr,10,Number(week_dists[i])/1000.0]);
               }
               
 

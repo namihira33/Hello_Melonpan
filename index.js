@@ -272,12 +272,14 @@ socket.on('SQL_WEEK',function(data){
         console.log(dists);
         console.log(cals);
         distance = 0;
+        calory = 0;
   });
     dt.setDate(dt.getDate() - 1);
   }
   var send_msg_dist = dists.slice(0,-1);
   var send_msg_cal  = cals.slice(0,-1); 
   socket.emit('SQL_WEEK_DIST',send_msg_dist);
+  socket.emit('SQL_WEEK_CAL',send_msg_cal);
   
 });
 
