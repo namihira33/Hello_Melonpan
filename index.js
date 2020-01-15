@@ -249,12 +249,12 @@ socket.on('SQL_WEEK',function(data){
   
   for(var i=0;i<7;i++){
       distance = 0;
+      calory = 0;
       query_str = "";
       var dtstr  = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
       console.log(dtstr);
       query_str += "SELECT distance FROM places WHERE date=" + "'" + dtstr + "';";
       client.query(query_str,(err,res) => {
-        j += 1;
         if(err) throw err;
         for(let row of res.rows){
           console.log(JSON.stringify(row));
@@ -274,7 +274,9 @@ socket.on('SQL_WEEK',function(data){
   });
     dt.setDate(dt.getDate() - 1);
   }
-  socket.emit('SQL_WEEK_DIST',dists);
+  var send_msg_dist = dists.slice(0,-1);
+  var send_msg_cal  = cals.slice(0,-1); 
+  socket.emit('SQL_WEEK_DIST',send_msg_dist);
   
 });
 
