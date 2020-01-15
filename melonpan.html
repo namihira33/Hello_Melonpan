@@ -676,7 +676,8 @@ button.btn-primary{
               var s_calory = 0.0;
          
               for(var i=0;i<today_dists.length;i++){
-               s_calory += calc_cal(today_dists[i]) ;
+               var v = (today_dists[i]/second) * 3600/1000;
+               s_calory += mets(v) * 58 * 1.05 /1000 ;
               }
               
               arr.push([dtstr,s_calory,today_distance/1000.0]);
