@@ -682,12 +682,12 @@ button.btn-primary{
               }
               
               arr.push([dtstr,s_calory,today_distance/1000.0]);
-              arr.push(['Date', 'kcal']);
+              arr.push(['Date','kcal','distance']);
               arr.reverse();
               console.log(arr);
               var data = google.visualization.arrayToDataTable(arr);
               var options = {
-                title: 'kcal / days',
+                title: '今日の記録',
                 series: {
                 0: {targetAxisIndex:0}, // 第1系列は左のY軸を使用
                 1: {targetAxisIndex:1}, // 第2系列は右のY時を使用
