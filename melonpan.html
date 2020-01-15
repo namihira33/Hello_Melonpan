@@ -855,6 +855,7 @@ button.btn-primary{
               function drawWeekChart(){
               var dt = new Date();
               var arr = [];
+              var cals = [];
               var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
                 console.log(data.message);
@@ -890,9 +891,13 @@ button.btn-primary{
                 var v = (today_dists[j]/second) * 3600/1000;
                 sum_calory += mets(v) * 58 * 1.05 /1000 ;
               }
-
-                arr.push([dtstr,sum_calory,Number(week_dists[i])/1000.0]);
+                
+                cals.push(sum_calory);
                 dt.setDate(dt.getDate() - 1);
+              }
+              
+              for(var i=0;i<7;i++){
+                arr.push([dtstr,cals[i],Number(week_dists[i])/1000.0]);
               }
 
               arr.push(['Date', 'kcal','distance']);
