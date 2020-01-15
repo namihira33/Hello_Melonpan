@@ -271,6 +271,7 @@ socket.on('SQL_WEEK',function(data){
         cals  += calory + ',';
         console.log(dists);
         console.log(cals);
+        distance = 0;
   });
     dt.setDate(dt.getDate() - 1);
   }
