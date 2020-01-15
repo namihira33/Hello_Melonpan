@@ -820,11 +820,6 @@ button.btn-primary{
        }
        
        function getDateline(socket,date){
-              var socket = io.connect();
-              socket.on('greeting', function(data, fn) {
-                console.log(data.message);
-              });
-              console.log('↓' + date);
                 socket.emit('SQL_TODAY',date);
             
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
@@ -835,6 +830,7 @@ button.btn-primary{
                 today_lngs = data.split(',');
                 console.log(today_lngs);
               });
+         
               var today_positions = [];
             
               for(var i=0;i<today_lats.length;i++){
@@ -873,11 +869,11 @@ button.btn-primary{
               for(var i=0;i<7;i++){
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                console.log(dtstr);
                 var s_calory = 0.0;
-         
-                for(var i=0;i<week_dists.length;i++){
-                  var v = (week_dists[i]/second) * 3600/1000;
+
+                getDateline(socket,dtstr);
+                for(var j=0;j<week_dists.length;j++){
+                  var v = (week_dists[j]/second) * 3600/1000;
                   s_calory = mets(v) * 58 * 1.05 /1000 ;
               }
                 arr.push([dtstr,s_calory,Number(week_dists[i])/1000.0]);
