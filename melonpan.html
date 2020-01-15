@@ -151,7 +151,7 @@
                     service.getDistanceMatrix({
                          origins: [originA],
                          destinations: [YourPosition],
-                         travelMode: 'WALKING',
+                         travelMode: 'CYCLING',
                          unitSystem: google.maps.UnitSystem.METRIC,
                          avoidHighways: true,
                          avoidTolls: true,
@@ -162,9 +162,13 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
+                         if(distance > 10){
+                          sumdist += distance;
+                         }
+
                          document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + distance + 'm';
 
-                         sumdist += distance;
+
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
                          socket.emit('info',info);
 
@@ -192,11 +196,11 @@
 
           function Calc() {
                this.calory = 0;
-               this.body = 58; /* 体重 (km) */
+               this.body = 58; /* 体重 (kg) */
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
-                    this.calory = mets(this.v) * this.body * 1.05 /1000;
+                    this.calory = mets(this.v) * this.body * 1.05 / 360;
                };
                this.vcalc = function (d) {
                     time = 10;
@@ -442,11 +446,6 @@ button.btn-primary{
                else if(status==1){
                 clearInterval(intervalID);
                }
-          }
-
-          function stopTimer() {
-               var k = 1000;
-               clearInterval(intervalID);
           }
 
           function getTodayData(){
