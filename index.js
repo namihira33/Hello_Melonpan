@@ -161,7 +161,7 @@ socket.on('SQL_TODAY',function(data){
 
     socket.emit('SQL_TODAY_LAT',send_msg_lat);
     socket.emit('SQL_TODAY_LNG',send_msg_lng);
-    socket.emit('SQL_TODAY_DIST',send_msg_dist);    
+    socket.emit('SQL_TODAY_DIST',send_msg_dist);
   });
   
     query_str = "SELECT SUM(distance) FROM places WHERE date=" + "'" + data + "';";
