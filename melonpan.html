@@ -613,7 +613,7 @@ button.btn-primary{
        
        function getColor(v){
          if(v<3.0){
-           return '#ebd842'; //金糸雀色
+           return '#1edddd'; //テーマ色
          }
         if (v < 8.9) {
             return '##f5b199'; //一献色
@@ -817,6 +817,40 @@ button.btn-primary{
                     today_ditance = rand(100) + 1;
                   }
               }); 
+       }
+       
+       function getDateline(date){
+              console.log('↓' + date);
+              var socket = io.connect();
+                socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
+                socket.emit('SQL_TODAY',date);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+                     
+              var today_positions = [];
+            
+              for(var i=0;i<today_lats.length;i++){
+                today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
+                today_positions.push(today_position);
+              }
+              
+              var line = new google.maps.Polyline({
+                    path: today_positions,
+                    strokeColor: '#1edddd',
+                    strokeOpacity: .7,
+                    strokeWeight: 3
+               });
+
+            line.setMap(map);
        }
        
        function getWeekChart(){
