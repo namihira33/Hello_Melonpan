@@ -307,6 +307,10 @@ button.btn-primary{
     background: #67c5ff;
     color: white;
 }
+
+    #image{
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -565,9 +569,15 @@ button.btn-primary{
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
               }
+              var today_positions = [];
+            
+              for(var i=0;i<today_lats.length;i++){
+                var today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
+                user_positions.push(today_position);
+              }
          
             lines3 = new google.maps.Polyline({
-                    path: user_positions,
+                    path: today_positions,
                     strokeColor: "FF0000",
                     strokeOpacity: .7,
                     strokeWeight: 7
