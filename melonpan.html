@@ -870,7 +870,7 @@ button.btn-primary{
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
                 var s_calory = 0.0;
-                socket.emit('SQL_TODAY',date);
+                socket.emit('SQL_TODAY',dtstr);
             
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
                 today_lats = data.split(',');
