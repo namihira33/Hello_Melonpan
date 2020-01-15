@@ -151,7 +151,7 @@
                     service.getDistanceMatrix({
                          origins: [originA],
                          destinations: [YourPosition],
-                         travelMode: 'BICYCLING',
+                         travelMode: 'CYCLING',
                          unitSystem: google.maps.UnitSystem.METRIC,
                          avoidHighways: true,
                          avoidTolls: true,
@@ -162,9 +162,13 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
+                         if(distance > 10){
+                          sumdist += distance;
+                         }
+
                          document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + distance + 'm';
 
-                         sumdist += distance;
+
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
                          socket.emit('info',info);
 
