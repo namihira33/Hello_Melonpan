@@ -820,6 +820,10 @@ button.btn-primary{
        }
        
        function getDateline(socket,date){
+              var socket = io.connect();
+              socket.on('greeting', function(data, fn) {
+                console.log(data.message);
+              });
               console.log('↓' + date);
                 socket.emit('SQL_TODAY',date);
             
@@ -864,11 +868,13 @@ button.btn-primary{
                 socket.on('SQL_WEEK_DIST', function(data, fn) {
                 week_dists = data.split(',').slice();
               });
+              io.close();
               console.log(week_dists);
               for(var i=0;i<7;i++){
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                getDateline(socket,dtstr);
+                console.log(dtstr);
+                getDateline(dtstr);
 //                calc_cal(week_dists[i]);
                 var s_calory = 0.0;
          
