@@ -867,41 +867,14 @@ button.btn-primary{
               });
 
               console.log(week_dists);
-              for(var i=0;i<1;i++){
-                sum_calory = 0.0;
-                var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                var s_calory = 0.0;
-                socket.emit('SQL_TODAY',dtstr);
-            
-                socket.on('SQL_TODAY_LAT', function(data, fn) {
-                today_lats = data.split(',');
-              });
-                socket.on('SQL_TODAY_LNG', function(data, fn) {
-                today_lngs = data.split(',');
-              });
-                socket.on('SQL_TODAY_DIST', function(data, fn) {
-                today_dists = data.split(',');
-                console.log(today_dists);
-              });
-         
-              var today_positions = [];
-              var s_cal = 0.0;
-              
-              for(var j=0;j<today_lats.length;j++){
-                today_position = new google.maps.LatLng(today_lats[j],today_lngs[j]);
-                today_positions.push(today_position);
-                var v = (today_dists[j]/second) * 3600/1000;
-                s_cal += mets(v) * 58 * 1.05 /1000 ;
-              }
-                
-                cals.push(Number(s_cal));
-                dt.setDate(dt.getDate() - 1);
-              }
-              
               for(var i=0;i<7;i++){
-                arr.push([dtstr,cals[i],Number(week_dists[i])/1000.0]);
-                console.log(cals[i]);
+                calory_s = 0.0;
+                var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
+                dt.setDate(dt.getDate() - 1);
+                arr.push([dtstr,10,Number(week_dists[i])/1000.0]);
+                console.log(calory_s);
               }
+              
 
               arr.push(['Date', 'kcal','distance']);
               arr.reverse();
