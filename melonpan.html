@@ -565,6 +565,16 @@ button.btn-primary{
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
               }
+         
+            lines3 = new google.maps.Polyline({
+                    path: user_positions,
+                    strokeColor: "FF0000",
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+            lines3.setMap(map);
+         
        }
        
          function getDateChart(date){
