@@ -639,6 +639,7 @@ button.btn-primary{
          
             function drawTodayChart() {
               var dt = new Date();
+              dt.setDate(dt.getDate() - 1);
               var arr = [];
               var dtstr  = dt.toLocaleDateString();
               console.log('↓' + dtstr);
