@@ -332,8 +332,8 @@ button.btn-primary{
 
      <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
-     <button class='btn btn-primary' type='button' onclick='getTodayChart();'>今日走った位置の描画</button>
-     <button class='btn btn-primary' type='button' onclick='getWeekChart();'>自分の走った距離と経路</button>
+     <button class='btn btn-primary' type='button' onclick='getTodayChart();'>今日の記録</button>
+     <button class='btn btn-primary' type='button' onclick='getWeekChart();'>過去の記録</button>
      
 
      <div id="dist"></div>
@@ -552,6 +552,7 @@ button.btn-primary{
                     today_distance = Number(data);
                   }
               });
+              console.log(today_lats);
               console.log(today_lngs);
               console.log(today_dists);
               console.log(today_distance);
@@ -573,8 +574,10 @@ button.btn-primary{
             
               for(var i=0;i<today_lats.length;i++){
                 var today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
-                user_positions.push(today_position);
+                today_positions.push(today_position);
               }
+         
+            console.log(today_positions);
          
             lines3 = new google.maps.Polyline({
                     path: today_positions,
