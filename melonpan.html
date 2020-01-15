@@ -870,8 +870,32 @@ button.btn-primary{
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
                 var s_calory = 0.0;
+                socket.emit('SQL_TODAY',date);
+            
+                socket.on('SQL_TODAY_LAT', function(data, fn) {
+                today_lats = data.split(',');
+                console.log(today_lats);
+              });
+                socket.on('SQL_TODAY_LNG', function(data, fn) {
+                today_lngs = data.split(',');
+                console.log(today_lngs);
+              });
+         
+              var today_positions = [];
+            
+              for(var i=0;i<today_lats.length;i++){
+                today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
+                today_positions.push(today_position);
+              }
+              
+              var line = new google.maps.Polyline({
+                    path: today_positions,
+                    strokeColor: '#1edddd',
+                    strokeOpacity: .7,
+                    strokeWeight: 3
+               });
 
-                getDateline(socket,dtstr);
+              line.setMap(map);
                 for(var j=0;j<week_dists.length;j++){
                   var v = (week_dists[j]/second) * 3600/1000;
                   s_calory = mets(v) * 58 * 1.05 /1000 ;
