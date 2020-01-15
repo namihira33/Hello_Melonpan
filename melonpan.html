@@ -1,4 +1,3 @@
-<!--  melonpan11.html 位置情報の検索が経過秒ごとに可能になった -->
 
 <html>
 
@@ -158,7 +157,7 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + distance + 'm';
+                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumdist + 'm';
 
                          sumdist += distance;
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
@@ -244,10 +243,7 @@
           }
        
      </script>
-</head>
-
-<body>
-    <style>
+      <style>
     #map-widget {
       background-color: #fff;
       border-radius: 2px;
@@ -283,9 +279,33 @@
         background: #67c5ff;
         color: white;
       }
-     </style>
-     <div id="container" style="width: 90%;margin: 0 auto;text-align: center;">
+      
+      #image {
+        background-color: #ffffff;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+      
+      body {
+        margin: 0;
+        background-color: #ffffff;
+      }
+      
+      #container {
+        background-color: #ffffff;
+      }
+      
+      #map_canvas {
+        border: solid 3px #1fd6d6;
+      }
+  </style>
+</head>
+
+<body>
+     <div id="image">
      <img src="https://www.u.tsukuba.ac.jp/~s1913566/media/ficle.png" style="max-width: 30%;text-align: center;">
+      </div>
+     <div id="container" style="width: 90%;margin: 0 auto;text-align: center;">
      <div style="height:420px;width: 90%;margin:0 auto;" id="map_canvas"></div>
      <div id="map-widget">
       <strong style="font-size:14px">距離 : </strong><br>
@@ -299,7 +319,7 @@
 
      <button class='btn btn-primary' type='button' onclick='setTimer();'>計測開始！</button>
      <button class='btn btn-primary' type='button' onclick='stopTimer();'>計測をやめる！</button>
-     <button class='btn btn-primary' type='button' onclick='getDateChart("2020/1/10");'>今日走った位置の描画</button>
+     <button class='btn btn-primary' type='button' onclick='getTodayChart();'>今日走った位置の描画</button>
      <button class='btn btn-primary' type='button' onclick='getWeekChart();'>自分の走った距離と経路</button>
      
 
@@ -518,9 +538,10 @@
                   if(data != null){
                     today_distance = Number(data);
                   }
-              }); 
+              });
               console.log(today_lngs);
               console.log(today_dists);
+              console.log(today_distance);
               console.log(Number(today_dists[0]));
               arr.push([dtstr,today_distance]);
               arr.push(['Date', 'kcal']);
