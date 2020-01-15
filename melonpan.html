@@ -672,13 +672,11 @@ button.btn-primary{
               console.log(today_dists);
               console.log(today_distance);
               console.log(Number(today_dists[0]));
+
               var s_calory = 0.0;
-              var color_strs = [];
          
               for(var i=0;i<today_dists.length;i++){
                s_calory += calc_cal(today_dists[i]) ;
-               var v = (today_dists[i]/second) * 3600/1000;
-               color_strs.push(getColor(v));
               }
               
               arr.push([dtstr,s_calory,today_distance/1000.0]);
@@ -708,16 +706,14 @@ button.btn-primary{
                 today_positions.push(today_position);
               }
          
- /*             var s_calory = 0.0;
+
               var color_strs = [];
          
               for(var i=0;i<today_dists.length;i++){
-               s_calory += calc_cal(today_dists[i]) ;
                var v = (today_dists[i]/second) * 3600/1000;
                color_strs.push(getColor(v));
-              } */
+              } 
          
-            console.log(today_positions);
             console.log(color_strs);
          
             for(var i=0;i<today_lats.length-1;i++){
