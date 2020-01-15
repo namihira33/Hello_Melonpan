@@ -137,6 +137,28 @@ io.sockets.on('connection', function(socket) {
 
 
 });
+
+            function mets(v) {
+               if(v < 3.0){
+                 return 0.0;
+               } 
+               if (v < 8.9) {
+                    return 3.5;
+               }
+               if (v < 15.100) {
+                    return 5.8;
+               }
+               if (v < 16.100) {
+                    return 6.3;
+               }
+               if (v < 19.200) {
+                    return 6.8;
+               }
+               if (v < 22.400) {
+                    return 8.0;
+               }
+               return 10.0;
+          }
   
 socket.on('SQL_TODAY',function(data){
   console.log(data);
@@ -218,35 +240,40 @@ socket.on('SQL_WEEK',function(data){
   console.log(data);
   var dt = new Date();
   var query_str = "";
+  var query_str2 = "";
   var dists = '';
+  var distance = 0;
+  var calory = 0;
   var j = 0;
   
   for(var i=0;i<7;i++){
+      distance = 0;
       query_str = "";
       var dtstr  = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
       console.log(dtstr);
-      query_str += "SELECT sum(distance) FROM places WHERE date=" + "'" + dtstr + "';";
+      query_str += "SELECT distance FROM places WHERE date=" + "'" + dtstr + "';";
       client.query(query_str,(err,res) => {
         j += 1;
         if(err) throw err;
         for(let row of res.rows){
           console.log(JSON.stringify(row));
-          if(row['sum'] != null){
-          dists += row['sum'] + ',';
-          console.log(dists);
+          if(row['distance'] != null){
+          distance += Number(row['distance']);
+          var v = distance/10 * 3600/1000;
+          calory += mets(v) * 58 * 1.05 /1000 ;
           }
           else{
-            dists += '0,';
-          }
-          if(j > 6){
-            var send_msg_dist = dists.slice(0,-1);
-            socket.emit('SQL_WEEK_DIST',send_msg_dist);
+            distance += 0;
           }
     }
-
+        dists += distance + ',';
+        cals  += calory + ',';
+        console.log(dists);
+        console.log(cals);
   });
     dt.setDate(dt.getDate() - 1);
   }
+  socket.emit('SQL_WEEK_DIST',dists);
   
 });
 
