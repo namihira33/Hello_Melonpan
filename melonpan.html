@@ -820,35 +820,6 @@ button.btn-primary{
               }); 
        }
        
-       function getDateline(socket,date){
-                socket.emit('SQL_TODAY',date);
-            
-                socket.on('SQL_TODAY_LAT', function(data, fn) {
-                today_lats = data.split(',');
-                console.log(today_lats);
-              });
-                socket.on('SQL_TODAY_LNG', function(data, fn) {
-                today_lngs = data.split(',');
-                console.log(today_lngs);
-              });
-         
-              var today_positions = [];
-            
-              for(var i=0;i<today_lats.length;i++){
-                today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
-                today_positions.push(today_position);
-              }
-              
-              var line = new google.maps.Polyline({
-                    path: today_positions,
-                    strokeColor: '#1edddd',
-                    strokeOpacity: .7,
-                    strokeWeight: 3
-               });
-
-            line.setMap(map);
-       }
-       
        function getWeekChart(){
               google.charts.load('current', {'packages':['corechart']});
               google.charts.setOnLoadCallback(drawWeekChart);

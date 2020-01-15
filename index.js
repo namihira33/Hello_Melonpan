@@ -255,6 +255,7 @@ socket.on('SQL_WEEK',function(data){
       console.log(dtstr);
       query_str += "SELECT distance FROM places WHERE date=" + "'" + dtstr + "';";
       client.query(query_str,(err,res) => {
+        j += 1;
         if(err) throw err;
         for(let row of res.rows){
           console.log(JSON.stringify(row));
@@ -269,17 +270,17 @@ socket.on('SQL_WEEK',function(data){
     }
         dists += distance + ',';
         cals  += calory + ',';
-        console.log(dists);
-        console.log(cals);
         distance = 0;
         calory = 0;
+        if(j>6){
+            var send_msg_dist = dists.slice(0,-1);
+            var send_msg_cal  = cals.slice(0,-1); 
+            socket.emit('SQL_WEEK_DIST',send_msg_dist);
+            socket.emit('SQL_WEEK_CAL',send_msg_cal);
+        }
   });
     dt.setDate(dt.getDate() - 1);
   }
-  var send_msg_dist = dists.slice(0,-1);
-  var send_msg_cal  = cals.slice(0,-1); 
-  socket.emit('SQL_WEEK_DIST',send_msg_dist);
-  socket.emit('SQL_WEEK_CAL',send_msg_cal);
   
 });
 
