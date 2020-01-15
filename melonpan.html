@@ -819,12 +819,8 @@ button.btn-primary{
               }); 
        }
        
-       function getDateline(date){
+       function getDateline(socket,date){
               console.log('↓' + date);
-              var socket = io.connect();
-                socket.on('greeting', function(data, fn) {
-                console.log(data.message);
-              });
                 socket.emit('SQL_TODAY',date);
             
                 socket.on('SQL_TODAY_LAT', function(data, fn) {
@@ -835,7 +831,6 @@ button.btn-primary{
                 today_lngs = data.split(',');
                 console.log(today_lngs);
               });
-                     
               var today_positions = [];
             
               for(var i=0;i<today_lats.length;i++){
@@ -873,7 +868,7 @@ button.btn-primary{
               for(var i=0;i<7;i++){
                 sum_calory = 0.0;
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
-                getDateline(dtstr);
+                getDateline(socket,dtstr);
 //                calc_cal(week_dists[i]);
                 var s_calory = 0.0;
          
