@@ -420,7 +420,7 @@ button.btn-primary{
 
     <button class='btn btn-primary' type='button' onclick='setTimer();' id='example'>計測開始！</button>
     <button class='btn btn-primary' type='button' onclick='getTodayChart();'>今日の記録</button>
-    <button class='btn btn-primary' type='button' onclick='getWeekChart();'>過去の記録</button>
+    <button class='btn btn-primary' type='button' onclick='getDateChart("2020/1/15");'>過去の記録</button>
      
 
      <div id="dist"></div>
@@ -613,7 +613,7 @@ button.btn-primary{
        
        function getColor(v){
          if(v<3.0){
-           return '#ffffff';
+           return '#ebd842'; //金糸雀色
          }
         if (v < 8.9) {
             return '##f5b199'; //一献色
@@ -672,6 +672,15 @@ button.btn-primary{
               console.log(today_dists);
               console.log(today_distance);
               console.log(Number(today_dists[0]));
+              var s_calory = 0.0;
+              var color_strs = [];
+         
+              for(var i=0;i<today_dists.length;i++){
+               s_calory += calc_cal(today_dists[i]) ;
+               var v = (today_dists[i]/second) * 3600/1000;
+               color_strs.push(getColor(v));
+              }
+              
               arr.push([dtstr,today_distance]);
               arr.push(['Date', 'kcal']);
               arr.reverse();
@@ -679,8 +688,15 @@ button.btn-primary{
               var data = google.visualization.arrayToDataTable(arr);
               var options = {
                 title: 'kcal / days',
+                series: {
+                0: {targetAxisIndex:0}, // 第1系列は左のY軸を使用
+                1: {targetAxisIndex:1}, // 第2系列は右のY時を使用
+                },
                 hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
-                vAxis: {minValue: 0}
+                vAxis: {
+                0:{title: 'kcal',minValue: 0},
+                1:{title: 'km',minValue: 1}
+               }
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
@@ -692,14 +708,14 @@ button.btn-primary{
                 today_positions.push(today_position);
               }
          
-              var s_calory = 0.0;
+ /*             var s_calory = 0.0;
               var color_strs = [];
          
               for(var i=0;i<today_dists.length;i++){
                s_calory += calc_cal(today_dists[i]) ;
                var v = (today_dists[i]/second) * 3600/1000;
                color_strs.push(getColor(v));
-              }
+              } */
          
             console.log(today_positions);
             console.log(color_strs);
