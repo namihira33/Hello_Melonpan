@@ -883,16 +883,15 @@ button.btn-primary{
               });
          
               var today_positions = [];
-              var s_calory = 0.0;
             
               for(var j=0;j<today_lats.length;j++){
                 today_position = new google.maps.LatLng(today_lats[j],today_lngs[j]);
                 today_positions.push(today_position);
                 var v = (today_dists[j]/second) * 3600/1000;
-                s_calory += mets(v) * 58 * 1.05 /1000 ;
+                sum_calory += mets(v) * 58 * 1.05 /1000 ;
               }
 
-                arr.push([dtstr,s_calory,Number(week_dists[i])/1000.0]);
+                arr.push([dtstr,sum_calory,Number(week_dists[i])/1000.0]);
                 dt.setDate(dt.getDate() - 1);
               }
 
