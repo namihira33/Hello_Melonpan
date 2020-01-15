@@ -1,4 +1,3 @@
-
 <html>
 
 <head>
@@ -8,7 +7,7 @@
      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
      <script type="text/javascript">
-          var map; /* Google Map インスタンス */
+          var map;    /* Google Map インスタンス */
           var marker; /* marker のインスタンス */
           var num_str;
           var positions = []; /* 現在位置情報LatLng型の配列 */
@@ -244,14 +243,16 @@
                return 10.0;
           }
        
-               $(function () {
+   $(function () {
      $("#example").click(function () {
          if ($(this).text() === "計測をやめる！") {
              $(this).text("計測開始！");
+             $("#map_canvas").css("border", "none");
              status = 0;
          } else if($(this).text() === "計測開始！"){
              $("#example").text("計測開始！");
              $(this).text("計測をやめる！");
+             $("#map_canvas").css("border", "3px solid #1edddd");
              status = 1;
          }
      });
@@ -272,11 +273,11 @@ body{
   background-color :#fffcf8;
 }
 
-div #map_canvas {
+#map_canvas {
   height:60%;
   width: 90%;
   margin:0 auto;
-  border: solid 2px #000000;
+  transition: 0.8s;
 }
 
 button.btn-primary{
@@ -610,6 +611,28 @@ button.btn-primary{
          
        }
        
+       function getColor(v){
+         if(v<3.0){
+           return '#ffffff';
+         }
+        if (v < 8.9) {
+            return '##f5b199'; //一献色
+        }
+        if (v < 15.100) {
+            return '#f0908d'; //薄紅色
+        }
+        if (v < 16.100) {
+            return '#80aba9'; //水浅葱色
+        }
+        if (v < 19.200) {
+            return '#a6a5c4' //藤鼠色
+        }
+        if (v < 22.400) {
+            return '#84a2d4'; //青藤色
+        }
+            return '#aacf53'; //萌黄色
+       }
+       
        function getTodayChart(){
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawTodayChart);
@@ -668,16 +691,37 @@ button.btn-primary{
                 today_positions.push(today_position);
               }
          
-            console.log(today_positions);
+              var s_calory = 0.0;
+              var color_strs = [];
          
-            lines3 = new google.maps.Polyline({
-                    path: today_positions,
-                    strokeColor: "FF0000",
+              for(var i=0;i<today_dists.length;i++){
+               s_calory += calc_cal(today_dists[i]) ;
+               var v = (today_dists[i]/second) * 3600/1000;
+               color_strs.push(getColor(v));
+              }
+         
+            console.log(today_positions);
+            console.log(color_strs);
+         
+            for(var i=0;i<today_lats.length-1;i++){
+               var line = new google.maps.Polyline({
+                    path: [today_positions[i],today_positions[i+1]],
+                    strokeColor: color_strs[i],
                     strokeOpacity: .7,
                     strokeWeight: 7
                });
 
-            lines3.setMap(map);
+            line.setMap(map);
+            }
+         
+  /*          lines3 = new google.maps.Polyline({
+                    path: today_positions,
+                    strokeColor: color_str,
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+            lines3.setMap(map); */
          
        }
        
@@ -783,11 +827,11 @@ button.btn-primary{
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
                 
                 calc_cal(week_dists[i]);
-                arr.push([dtstr,sum_calory,Number(week_dists[i])]);
+                arr.push([dtstr,sum_calory,Number(week_dists[i])/1000.0]);
                 dt.setDate(dt.getDate() - 1);
               }
 
-              arr.push(['Date', 'kcal','dist']);
+              arr.push(['Date', 'kcal','distance']);
               arr.reverse();
               console.log(arr);
               var data = google.visualization.arrayToDataTable(arr);
@@ -800,7 +844,7 @@ button.btn-primary{
                 hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
                 vAxis: {
                 0:{title: 'kcal',minValue: 0},
-                1:{title: 'm',minValue: 1}
+                1:{title: 'km',minValue: 1}
                 }
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
