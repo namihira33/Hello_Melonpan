@@ -242,6 +242,7 @@ socket.on('SQL_WEEK',function(data){
   var query_str = "";
   var query_str2 = "";
   var dists = '';
+  var cals ='';
   var distance = 0;
   var calory = 0;
   var j = 0;
