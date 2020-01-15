@@ -866,6 +866,7 @@ button.btn-primary{
                 socket.on('SQL_WEEK_DIST', function(data, fn) {
                 week_dists = data.split(',').slice();
                 console.log(week_dists);
+                });
                   
                 socket.on('SQL_WEEK_CAL', function(data, fn) {
                 week_cals = data.split(',').slice();
