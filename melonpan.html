@@ -615,7 +615,7 @@ button.btn-primary{
        }
        
        function getColor(v){
-         if(v<3.0){
+         if(v<2.0){
            return '#f0908d'; 
          }
         if (v < 8.9) {
@@ -642,7 +642,6 @@ button.btn-primary{
          
             function drawTodayChart() {
               var dt = new Date();
-              dt.setDate(dt.getDate() - 1);
               var arr = [];
               var dtstr  = dt.toLocaleDateString();
               console.log('↓' + dtstr);
