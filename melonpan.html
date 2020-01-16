@@ -1,5 +1,3 @@
-<!--  melonpan11.html 位置情報の検索が経過秒ごとに可能になった -->
-
 <html>
 
 <head>
@@ -9,9 +7,8 @@
      <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 
-
      <script type="text/javascript">
-          var map; /* Google Map インスタンス */
+          var map;    /* Google Map インスタンス */
           var marker; /* marker のインスタンス */
           var num_str;
           var positions = []; /* 現在位置情報LatLng型の配列 */
@@ -23,13 +20,15 @@
           var today_distance = 15;
           var today_datas = [];
           var week_dists = [];
-
+          var week_cals = [];
+          
           var user_lats = [];
           var user_lngs = [];
           var user_distance = 0;
 
           var sum_calory = 0.0;
           var calory = 0;
+          var status = 0;
           var dtstr = '';
           var status = 0;
 
@@ -116,9 +115,9 @@
                /* 線を引く := positionsに入っている配列の緯度経度を全部結ぶ */
                lines = new google.maps.Polyline({
                     path: positions,
-                    strokeColor: "FF0000",
+                    strokeColor: "#f0908d",
                     strokeOpacity: .7,
-                    strokeWeight: 7
+                    strokeWeight: 5
                });
 
                lines.setMap(map);
@@ -162,13 +161,11 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-                         if(distance > 10){
-                          sumdist += distance;
-                         }
-
-                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + distance + 'm';
-
-
+                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumdist + 'm';
+                      
+                          if(distance > 10){
+                           sumdist += distance;
+                          }
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
                          socket.emit('info',info);
 
@@ -200,7 +197,7 @@
                this.v = 0;
                this.time = 10;
                this.calorycalc = function () {
-                    this.calory = mets(this.v) * this.body * 1.05 / 360;
+                    this.calory = mets(this.v) * this.body * 1.05 /360; 
                };
                this.vcalc = function (d) {
                     time = 10;
@@ -211,12 +208,11 @@
 
           function calc_cal(dist){
                var c = new Calc();
-               c.v = (dist/second) * 3600/1000;
+               c.v = (dist/second) * 3600/360;
                c.vcalc(dist);
                c.calorycalc();
 
                sum_calory += c.calory;
-
                document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(sum_calory)*10/10 + 'kcal';
           }
 
@@ -264,6 +260,21 @@
     });
 });
        
+   $(function () {
+     $("#example").click(function () {
+         if ($(this).text() === "計測をやめる！") {
+             $(this).text("計測開始！");
+             $("#map_canvas").css("border", "none");
+             status = 0;
+         } else if($(this).text() === "計測開始！"){
+             $("#example").text("計測開始！");
+             $(this).text("計測をやめる！");
+             $("#map_canvas").css("border", "3px solid #1edddd");
+             status = 1;
+         }
+     });
+ });
+       
      </script>
   
 <style>
@@ -271,19 +282,22 @@
 body{
   background-color :#1edddd;
 }
-  
+
 #container {
   text-align: center;
   width: 90%;
   height:100%;
   margin: 0 auto;
+
+  padding-top: 10px;
   background-color :#fffcf8;
 }
 
-div#map_canvas {
+#map_canvas {
   height:60%;
   width: 90%;
   margin:0 auto;
+  transition: 0.8s;
 }
 
 button.btn-primary{
@@ -340,77 +354,82 @@ button.btn-primary{
     color: white;
 }
 
+#image{
+    text-align: center;
+  }
+/* === ボタンを表示するエリア ============================== */
+  .switchArea {
+   line-height    : 60px;                /* 1行の高さ          */
+   letter-spacing : 0;                   /* 文字間             */
+   text-align     : center;              /* 文字位置は中央     */
+   font-size      : 27px;                /* 文字サイズ         */
 
- /* === ボタンを表示するエリア ============================== */
- .switchArea {
-  line-height    : 60px;                /* 1行の高さ          */
-  letter-spacing : 0;                   /* 文字間             */
-  text-align     : center;              /* 文字位置は中央     */
-  font-size      : 27px;                /* 文字サイズ         */
+   position       : relative;            /* 親要素が基点       */
+   margin         : auto;                /* 中央寄せ           */
+   width          : 260px;               /* ボタンの横幅       */
+   background     : #fff;                /* デフォルト背景色   */
+ }
 
-  position       : relative;            /* 親要素が基点       */
-  margin         : auto;                /* 中央寄せ           */
-  width          : 260px;               /* ボタンの横幅       */
-  background     : #fff;                /* デフォルト背景色   */
-}
+  /* === チェックボックス ==================================== */
+ .switchArea input[type="checkbox"] {
+   display        : none;            /* チェックボックス非表示 */
+ }
 
- /* === チェックボックス ==================================== */
-.switchArea input[type="checkbox"] {
-  display        : none;            /* チェックボックス非表示 */
-}
+  /* === チェックボックスのラベル（標準） ==================== */
+ .switchArea label {
+   display        : block;               /* ボックス要素に変更 */
+   box-sizing     : border-box;          /* 枠線を含んだサイズ */
+   height         : 60px;                /* ボタンの高さ       */
+   border         : 2px solid #cccccc;   /* 未選択タブのの枠線 */
+   border-radius  : 30px;                /* 角丸               */
+ }
 
- /* === チェックボックスのラベル（標準） ==================== */
-.switchArea label {
-  display        : block;               /* ボックス要素に変更 */
-  box-sizing     : border-box;          /* 枠線を含んだサイズ */
-  height         : 60px;                /* ボタンの高さ       */
-  border         : 2px solid #cccccc;   /* 未選択タブのの枠線 */
-  border-radius  : 30px;                /* 角丸               */
-}
+  /* === チェックボックスのラベル（ONのとき） ================ */
+ .switchArea input[type="checkbox"]:checked +label {
+   border-color   : #67c5ff;             /* 選択タブの枠線     */
+ }
 
- /* === チェックボックスのラベル（ONのとき） ================ */
-.switchArea input[type="checkbox"]:checked +label {
-  border-color   : #67c5ff;             /* 選択タブの枠線     */
-}
+  /* === 表示する文字（標準） ================================ */
+ .switchArea label span:after{
+   content        : "OFF";               /* 表示する文字       */
+   padding        : 0 0 0 36px;          /* 表示する位置       */
+   color          : #cccccc;             /* 文字色             */
+ }
 
- /* === 表示する文字（標準） ================================ */
-.switchArea label span:after{
-  content        : "OFF";               /* 表示する文字       */
-  padding        : 0 0 0 36px;          /* 表示する位置       */
-  color          : #cccccc;             /* 文字色             */
-}
+  /* === 表示する文字（ONのとき） ============================ */
+ .switchArea  input[type="checkbox"]:checked + label span:after{
+   content        : "ON";                /* 表示する文字       */
+   padding        : 0 36px 0 0;          /* 表示する位置       */
+   color          : #67c5ff;             /* 文字色             */
+ }
 
- /* === 表示する文字（ONのとき） ============================ */
-.switchArea  input[type="checkbox"]:checked + label span:after{
-  content        : "ON";                /* 表示する文字       */
-  padding        : 0 36px 0 0;          /* 表示する位置       */
-  color          : #67c5ff;             /* 文字色             */
-}
+  /* === 丸部分のSTYLE（標準） =============================== */
+ .switchArea #swImg {
+   position       : absolute;            /* 親要素からの相対位置*/
+   width          : 52px;                /* 丸の横幅           */
+   height         : 52px;                /* 丸の高さ           */
+   background     : #cccccc;             /* カーソルタブの背景 */
+   top            : 4px;                 /* 親要素からの位置   */
+   left           : 4px;                 /* 親要素からの位置   */
+   border-radius  : 26px;                /* 角丸               */
+   transition     : .2s;                 /* 滑らか変化         */
+ }
 
- /* === 丸部分のSTYLE（標準） =============================== */
-.switchArea #swImg {
-  position       : absolute;            /* 親要素からの相対位置*/
-  width          : 52px;                /* 丸の横幅           */
-  height         : 52px;                /* 丸の高さ           */
-  background     : #cccccc;             /* カーソルタブの背景 */
-  top            : 4px;                 /* 親要素からの位置   */
-  left           : 4px;                 /* 親要素からの位置   */
-  border-radius  : 26px;                /* 角丸               */
-  transition     : .2s;                 /* 滑らか変化         */
-}
-
- /* === 丸部分のSTYLE（ONのとき） =========================== */
-.switchArea input[type="checkbox"]:checked ~ #swImg {
-  transform      : translateX(200px);    /* 丸も右へ移動       */
-  background     : #67c5ff;             /* カーソルタブの背景 */
-}
-   </style>
+  /* === 丸部分のSTYLE（ONのとき） =========================== */
+ .switchArea input[type="checkbox"]:checked ~ #swImg {
+   transform      : translateX(200px);    /* 丸も右へ移動       */
+   background     : #67c5ff;             /* カーソルタブの背景 */
+ }
+  </style>
 </head>
 
 <body>
+     <div id="image">
+     <img src="https://www.u.tsukuba.ac.jp/~s1913566/media/ficle.png" style="max-width: 50%;text-align: center;">
+      </div>
      <div id="container" style="width: 90%;margin: 0 auto;text-align: center;">
-     <img src="https://www.u.tsukuba.ac.jp/~s1913566/media/ficle.png" style="max-width: 30%;text-align: center;">
-     <div style="height:840px;width: 95%;margin:0 auto;" id="map_canvas"></div>
+     <div style="height:50%;width: 95%;margin:0 auto;" id="map_canvas"></div>
+
      <div id="map-widget">
       <strong style="font-size:14px">距離 : </strong><br>
      </div>
@@ -422,8 +441,9 @@ button.btn-primary{
      <br />
 
     <button class='btn btn-primary' type='button' onclick='setTimer();' id='example'>計測開始！</button>
-    <button class='btn btn-primary' type='button' onclick='getDateChart("2020/1/10");'>今日の記録</button>
+    <button class='btn btn-primary' type='button' onclick='getTodayChart();'>今日の記録</button>
     <button class='btn btn-primary' type='button' onclick='getWeekChart();'>過去の記録</button>
+    
 
      <div id="dist"></div>
      <div id="speed"></div>
@@ -440,12 +460,14 @@ button.btn-primary{
 
           function setTimer() {
                var k = 1000;
-               if(status==0){
-                intervalID = setInterval(getCurrentPosition, second * k);
-               }
-               else if(status==1){
-                clearInterval(intervalID);
-               }
+
+                if(status==0){
+                 intervalID = setInterval(getCurrentPosition, second * k);
+                }
+                else if(status==1){
+                 clearInterval(intervalID);
+                }
+
           }
 
           function getTodayData(){
@@ -608,6 +630,29 @@ button.btn-primary{
 
        }
 
+       
+       function getColor(v){
+         if(v<2.0){
+           return '#f0908d'; 
+         }
+        if (v < 8.9) {
+            return '#84a2d4'; 
+        }
+        if (v < 15.100) {
+            return '#1edddd';
+        }
+        if (v < 16.100) {
+            return '#80aba9'; //水浅葱色
+        }
+        if (v < 19.200) {
+            return '#84a2d4';
+        }
+        if (v < 22.400) {
+            return '#84a2d4'; //青藤色
+        }
+            return '#f0908d'; //萌黄色
+       }
+       
        function getTodayChart(){
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawTodayChart);
@@ -641,22 +686,79 @@ button.btn-primary{
                     today_distance = Number(data);
                   }
               });
+
+
               console.log(today_lngs);
               console.log(today_dists);
+              console.log(today_distance);
               console.log(Number(today_dists[0]));
-              arr.push([dtstr,today_distance]);
-              arr.push(['Date', 'kcal']);
+
+              var s_calory = 0.0;
+         
+              for(var i=0;i<today_dists.length;i++){
+               var v = (today_dists[i]/second) * 3600/1000;
+               s_calory += mets(v) * 58 * 1.05 /360 ;
+              }
+              document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(s_calory)*10/10 + 'kcal';
+              
+              arr.push([dtstr,s_calory,today_distance/1000.0]);
+              arr.push(['Date','kcal','distance']);
               arr.reverse();
               console.log(arr);
               var data = google.visualization.arrayToDataTable(arr);
               var options = {
-                title: 'kcal / days',
+                title: '今日の記録',
+                series: {
+                0: {targetAxisIndex:0}, // 第1系列は左のY軸を使用
+                1: {targetAxisIndex:1}, // 第2系列は右のY時を使用
+                },
                 hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
-                vAxis: {minValue: 0}
+                vAxis: {
+                0:{title: 'kcal',minValue: 0},
+                1:{title: 'km',minValue: 1}
+               }
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
               }
+              var today_positions = [];
+            
+              for(var i=0;i<today_lats.length;i++){
+                var today_position = new google.maps.LatLng(today_lats[i],today_lngs[i]);
+                today_positions.push(today_position);
+              }
+         
+
+              var color_strs = [];
+         
+              for(var i=0;i<today_dists.length;i++){
+               var v = (today_dists[i]/second) * 3600/1000;
+               color_strs.push(getColor(v));
+              } 
+         
+            console.log(color_strs);
+         
+            for(var i=0;i<today_lats.length-1;i++){
+               var line = new google.maps.Polyline({
+                    path: [today_positions[i],today_positions[i+1]],
+                    strokeColor: color_strs[i],
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+            line.setMap(map);
+            }
+            document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + today_distance/1000.0 + 'km';
+         
+  /*          lines3 = new google.maps.Polyline({
+                    path: today_positions,
+                    strokeColor: color_str,
+                    strokeOpacity: .7,
+                    strokeWeight: 7
+               });
+
+            lines3.setMap(map); */
+         
        }
 
          function getDateChart(date){
@@ -746,6 +848,9 @@ button.btn-primary{
               function drawWeekChart(){
               var dt = new Date();
               var arr = [];
+              var cals = [];
+              var sumd = 0;
+              var sumc = 0;
               var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
                 console.log(data.message);
@@ -754,18 +859,29 @@ button.btn-primary{
 
                 socket.on('SQL_WEEK_DIST', function(data, fn) {
                 week_dists = data.split(',').slice();
+                console.log(week_dists);
+                });
+                  
+                socket.on('SQL_WEEK_CAL', function(data, fn) {
+                week_cals = data.split(',').slice();
+                console.log(week_cals);
               });
+
               console.log(week_dists);
               for(var i=0;i<7;i++){
-                sum_calory = 0.0;
+                sumd += Number(week_dists[i])/1000.0;
+                sumc += Number(week_cals[i]);
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
 
-                calc_cal(week_dists[i]);
-                arr.push([dtstr,sum_calory,Number(week_dists[i])]);
+                arr.push([dtstr,Number(week_cals[i]),Number(week_dists[i])/1000.0]);
+
                 dt.setDate(dt.getDate() - 1);
               }
+              document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumd + 'km';
+              document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.floor(sumc/10)*10 + 'kcal';
+              
 
-              arr.push(['Date', 'kcal','dist']);
+              arr.push(['Date', 'kcal','distance']);
               arr.reverse();
               console.log(arr);
               var data = google.visualization.arrayToDataTable(arr);
@@ -778,7 +894,7 @@ button.btn-primary{
                 hAxis: {title: 'Date',  titleTextStyle: {color: '#333'}},
                 vAxis: {
                 0:{title: 'kcal',minValue: 0},
-                1:{title: 'm',minValue: 1}
+                1:{title: 'km',minValue: 1}
                 }
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
