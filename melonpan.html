@@ -211,7 +211,6 @@
                c.calorycalc();
 
                sum_calory += c.calory;
-
                document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(sum_calory)*10/10 + 'kcal';
           }
        
@@ -729,6 +728,8 @@ button.btn-primary{
 
             line.setMap(map);
             }
+            document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + today_distance/1000.0 + 'km';
+            document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(s_calory)*10/10 + 'kcal';
          
   /*          lines3 = new google.maps.Polyline({
                     path: today_positions,
