@@ -680,6 +680,7 @@ button.btn-primary{
                var v = (today_dists[i]/second) * 3600/1000;
                s_calory += mets(v) * 58 * 1.05 /360 ;
               }
+              document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(s_calory)*10/10 + 'kcal';
               
               arr.push([dtstr,s_calory,today_distance/1000.0]);
               arr.push(['Date','kcal','distance']);
@@ -729,7 +730,6 @@ button.btn-primary{
             line.setMap(map);
             }
             document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + today_distance/1000.0 + 'km';
-            document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.round(s_calory)*10/10 + 'kcal';
          
   /*          lines3 = new google.maps.Polyline({
                     path: today_positions,
@@ -830,6 +830,8 @@ button.btn-primary{
               var dt = new Date();
               var arr = [];
               var cals = [];
+              var sumd = 0;
+              var sumc = 0;
               var socket = io.connect();
                 socket.on('greeting', function(data, fn) {
                 console.log(data.message);
@@ -848,10 +850,14 @@ button.btn-primary{
 
               console.log(week_dists);
               for(var i=0;i<7;i++){
+                sumd += Number(week_dists[i])/1000.0;
+                sumc += Number(week_cals[i]);
                 var dtstr = dt.getFullYear() + '/' + (dt.getMonth()+1) + '/' + dt.getDate();
                 arr.push([dtstr,Number(week_cals[i]),Number(week_dists[i])/1000.0]);
                 dt.setDate(dt.getDate() - 1);
               }
+              document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumd + 'm';
+              document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + sumc + 'kcal';
               
 
               arr.push(['Date', 'kcal','distance']);
