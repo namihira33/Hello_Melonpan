@@ -857,7 +857,7 @@ button.btn-primary{
                 dt.setDate(dt.getDate() - 1);
               }
               document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumd + 'm';
-              document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + sumc + 'kcal';
+              document.getElementById('map-widget2').innerHTML =   '<strong style="font-size:14px">消費カロリー :   </strong>' + Math.floor(sumc/10)*10 + 'kcal';
               
 
               arr.push(['Date', 'kcal','distance']);
