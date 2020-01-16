@@ -113,7 +113,7 @@
                /* 線を引く := positionsに入っている配列の緯度経度を全部結ぶ */
                lines = new google.maps.Polyline({
                     path: positions,
-                    strokeColor: "FF0000",
+                    strokeColor: "#f0908d",
                     strokeOpacity: .7,
                     strokeWeight: 5
                });
@@ -616,19 +616,19 @@ button.btn-primary{
        
        function getColor(v){
          if(v<3.0){
-           return '#f0908d'; //テーマ色
+           return '#f0908d'; 
          }
         if (v < 8.9) {
-            return '#f0908d'; //一献色
+            return '##84a2d4'; 
         }
         if (v < 15.100) {
-            return '#1edddd'; //薄紅色
+            return '#1edddd';
         }
         if (v < 16.100) {
             return '#80aba9'; //水浅葱色
         }
         if (v < 19.200) {
-            return '#84a2d44'
+            return '#84a2d4'
         }
         if (v < 22.400) {
             return '#84a2d4'; //青藤色
