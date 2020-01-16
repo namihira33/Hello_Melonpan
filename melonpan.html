@@ -161,7 +161,6 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-<<<<<<< HEAD
                          if(distance > 10){ //10秒に10m移動していたら加算
                           sumdist += distance;
                          }
@@ -169,13 +168,6 @@
                          document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumdist + 'm';
 
 
-=======
-                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumdist + 'm';
-                      
-                          if(distance > 10){
-                           sumdist += distance;
-                          }
->>>>>>> master
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
                          socket.emit('info',info);
 
@@ -905,7 +897,7 @@ button.btn-primary{
                 vAxis: {
                 0:{title: 'kcal',minValue: 0},
                 1:{title: 'km',minValue: 1}
-                }
+                        }
               };
               var chart = new google.visualization.ColumnChart(document.getElementById('chartW'));
               chart.draw(data, options);
