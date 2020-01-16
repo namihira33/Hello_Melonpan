@@ -100,7 +100,7 @@
                map.setCenter(YourPosition);
                var win_options = {
                     content: '<b>現在位置</b><br />緯度：' + YourPosition.lat() + '<br />経度：' + YourPosition.lng() +
-                         '<br />取得時間：' + now_str + '<br />' + sumdist + 'm'
+                         '<br />取得時間：' + now_str + '<br />' + distance + 'm'
                };
 
               /* 送信用の情報を作成 -> 送信 */
@@ -162,11 +162,11 @@
                          distance = response['rows'][0]['elements'][0]['distance']['value'];
                          calc_cal(distance);
 
-                         if(distance > 10){
+                         if(distance > 10){ //10秒に10m移動していたら加算
                           sumdist += distance;
                          }
 
-                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + distance + 'm';
+                         document.getElementById('map-widget').innerHTML =       '<strong style="font-size:14px">距離 :   </strong>' + sumdist + 'm';
 
 
                         var info = YourPosition.lat() + ',' + YourPosition.lng() + ',' + now_str +',' + distance;
